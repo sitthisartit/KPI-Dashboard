@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #e0f2fe; /* Brighter background: Light Sky Blue */
         }
         .chart-container {
             position: relative;
@@ -40,18 +40,12 @@
         .section-hidden {
             display: none;
         }
-        .quiz-iframe {
-            width: 100%;
-            height: 600px; /* Adjust height as needed for the quiz */
-            border: none;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
-        }
+        /* Removed .quiz-iframe and .document-iframe styles as iframes are no longer used for quizzes */
     </style>
 </head>
 <body class="text-gray-800">
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-gray-200 bg-opacity-75 flex items-center justify-center z-[100]">
+    <div id="loading-overlay" class="fixed inset-0 bg-sky-50 bg-opacity-75 flex items-center justify-center z-[100]">
         <div class="flex flex-col items-center">
             <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
             <p class="mt-4 text-gray-700 text-lg">กำลังโหลด...</p>
@@ -62,23 +56,26 @@
         <header class="text-center mb-10">
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">วัตถุประสงค์คุณภาพ (KPI)</h1>
             <p class="text-xl text-gray-600 mt-2">แผนกคลังสินค้า ประจำปี 2568</p>
-            <div class="w-24 h-1 bg-blue-600 mx-auto mt-4 rounded"></div>
+            <div class="w-24 h-1 bg-teal-500 mx-auto mt-4 rounded"></div> <!-- Brighter header line -->
         </header>
 
         <!-- Navigation Menu -->
         <nav class="mb-8 flex justify-center space-x-6">
-            <button id="nav-kpi-risk" class="text-lg font-semibold text-blue-700 hover:text-blue-900 transition-colors py-2 px-4 rounded-lg bg-blue-100 shadow-md">
+            <button id="nav-kpi-risk" class="text-lg font-semibold text-blue-900 hover:text-blue-900 transition-colors py-2 px-4 rounded-lg bg-blue-300 shadow-md">
                 KPI & ความเสี่ยง
             </button>
-            <button id="nav-quiz" class="text-lg font-semibold text-gray-700 hover:text-gray-900 transition-colors py-2 px-4 rounded-lg bg-gray-100 shadow-md">
+            <button id="nav-quiz" class="text-lg font-semibold text-blue-700 hover:text-blue-900 transition-colors py-2 px-4 rounded-lg bg-blue-100 shadow-md">
                 ข้อสอบ
+            </button>
+            <button id="nav-document-forms" class="text-lg font-semibold text-blue-700 hover:text-blue-900 transition-colors py-2 px-4 rounded-lg bg-blue-100 shadow-md">
+                แบบฟอร์มเอกสาร
             </button>
         </nav>
 
         <section id="kpi-risk-section">
             <div class="mb-6 flex justify-center items-center">
                 <label for="month-select" class="mr-3 text-lg font-semibold text-gray-700">เลือกเดือน:</label>
-                <select id="month-select" class="p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                <select id="month-select" class="p-2 border border-blue-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
                 </select>
             </div>
 
@@ -144,19 +141,55 @@
             </p>
 
             <div class="space-y-12">
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">1. แบบทดสอบพนักงานเก็บสินค้าในไลน์ผลิต</h3>
-                    <iframe class="quiz-iframe" src="https://forms.gle/zpucuz1HyK22N5bg8"></iframe>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">1. แบบทดสอบพนักงานเก็บสินค้าในไลน์ผลิต</h3>
+                    <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/GjgDKJ7Pqi8vvpRE7">
+                        ทำแบบทดสอบ
+                    </button>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">2. แบบทดสอบพนักงานจัดเตรียมสินค้าส่งออก</h3>
-                    <iframe class="quiz-iframe" src="https://forms.gle/MwdmKPsZYuHBajU17"></iframe>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">2. แบบทดสอบพนักงานจัดเตรียมสินค้าส่งออก</h3>
+                    <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/MwdmKPsZYuHBajU17">
+                        ทำแบบทดสอบ
+                    </button>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">3. แบบทดสอบพนักงานเบิกจ่ายวัสดุประกอบ</h3>
-                    <iframe class="quiz-iframe" src="https://forms.gle/3f9x5tjSKQ2ZgZj8A"></iframe>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">3. แบบทดสอบพนักงานเบิกจ่ายวัสดุประกอบ</h3>
+                    <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/3f9x5tjSKQ2ZgZj8A">
+                        ทำแบบทดสอบ
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Document Forms Section (New) -->
+        <section id="document-forms-section" class="mt-16 section-hidden">
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">แบบฟอร์มเอกสารในแผนก</h2>
+            <p class="text-lg text-gray-700 text-center mb-10 max-w-3xl mx-auto">
+                ส่วนนี้จะรวบรวมแบบฟอร์มเอกสารที่สำคัญสำหรับการปฏิบัติงานในแผนกคลังสินค้า
+            </p>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">วัตถุประสงค์คุณภาพ (KPI) แผนกคลังสินค้า (saha p.v.c.1980)</h3>
+                    <p class="text-gray-600 mb-4">
+                        (เอกสารนี้เป็น Google Sheet)
+                    </p>
+                    <a href="https://docs.google.com/spreadsheets/d/1a6DdbnbNaNLjXZg4MncuK9mwOWlrwTQizzngf27TgLg/edit?usp=sharing" target="_blank" class="inline-block bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors shadow-md">
+                        เปิด Google Sheet
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center text-gray-700">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">เพิ่มแบบฟอร์มเอกสารอื่นๆ</h3>
+                    <p class="text-xl mb-4">
+                        หากคุณต้องการเพิ่มแบบฟอร์มเอกสารอื่นๆ กรุณาอัปโหลดไฟล์ไปยัง Google Drive และทำตามขั้นตอนการรับลิงก์สำหรับแชร์
+                    </p>
+                    <p class="text-gray-600 mt-4">
+                        จากนั้นแจ้งชื่อแบบฟอร์มและ **ลิงก์ Google Drive** มาให้ผมได้เลยครับ ผมจะช่วยเพิ่มลงในหน้านี้ให้
+                    </p>
                 </div>
             </div>
         </section>
@@ -194,11 +227,9 @@
 
     <script type="module">
         // นำเข้าโมดูล Firebase ที่จำเป็น
-        // Note: Firebase SDKs are commented out as they are not directly used in this version of the code.
-        // If Firebase functionality is needed, uncomment and ensure correct configuration.
-        // import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        // import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         let db;
         let auth;
@@ -224,16 +255,16 @@
                         { score: 4, value: '>98%', color: 'text-green-500' },
                         { score: 3, value: '98%', color: 'text-blue-500' },
                         { score: 2, value: '<98%', color: 'text-amber-500' },
-                        { score: 1, value: '<96%', color: 'text-red-500' }
+                        { score: 1, value: '<96%', color: 'text-rose-500' } /* Changed to rose-500 */
                     ]
                 },
                 monthlyData: {
-                    '0': { currentValue: 98.7, target: 98 }, // ม.ค.
-                    '1': { currentValue: 97.5, target: 98 }, // ก.พ.
-                    '2': { currentValue: 99.1, target: 98 }, // มี.ค.
-                    '3': { currentValue: 96.8, target: 98 }, // เม.ย.
-                    '4': { currentValue: 98.0, target: 98 }, // พ.ค.
-                    '5': { currentValue: 99.5, target: 98 }  // มิ.ย.
+                    '0': { currentValue: 100, target: 98 }, // ม.ค.
+                    '1': { currentValue: 100, target: 98 }, // ก.พ.
+                    '2': { currentValue: 100, target: 98 }, // มี.ค.
+                    '3': { currentValue: 99.34, target: 98 }, // เม.ย.
+                    '4': { currentValue: 98.57, target: 98 }, // พ.ค.
+                    '5': { currentValue: 0, target: 98 }  // มิ.ย.
                 }
             },
             {
@@ -250,16 +281,16 @@
                         { score: 4, value: '>98%', color: 'text-green-500' },
                         { score: 3, value: '98%', color: 'text-blue-500' },
                         { score: 2, value: '<98%', color: 'text-amber-500' },
-                        { score: 1, value: '<96%', color: 'text-red-500' }
+                        { score: 1, value: '<96%', color: 'text-rose-500' } /* Changed to rose-500 */
                     ]
                 },
                 monthlyData: {
-                    '0': { currentValue: 99.2, target: 98 },
-                    '1': { currentValue: 98.5, target: 98 },
-                    '2': { currentValue: 97.0, target: 98 },
-                    '3': { currentValue: 99.0, target: 98 },
-                    '4': { currentValue: 97.8, target: 98 },
-                    '5': { currentValue: 98.9, target: 98 }
+                    '0': { currentValue: 100, target: 98 },
+                    '1': { currentValue: 100, target: 98 },
+                    '2': { currentValue: 99.41, target: 98 },
+                    '3': { currentValue: 98.96, target: 98 },
+                    '4': { currentValue: 99.46, target: 98 },
+                    '5': { currentValue: 0, target: 98 }
                 }
             },
             {
@@ -277,16 +308,16 @@
                         { score: 4, value: '3 ครั้ง', color: 'text-green-500' },
                         { score: 3, value: '4 ครั้ง', color: 'text-blue-500' },
                         { score: 2, value: '5 ครั้ง', color: 'text-amber-500' },
-                        { score: 1, value: '>5 ครั้ง', color: 'text-red-500' }
+                        { score: 1, value: '>5 ครั้ง', color: 'text-rose-500' } /* Changed to rose-500 */
                     ]
                 },
                 monthlyData: {
-                    '0': { currentValue: 2, target: 4 },
-                    '1': { currentValue: 3, target: 4 },
-                    '2': { currentValue: 5, target: 4 },
-                    '3': { currentValue: 1, target: 4 },
-                    '4': { currentValue: 4, target: 4 },
-                    '5': { currentValue: 2, target: 4 }
+                    '0': { currentValue: '-', target: 4 },
+                    '1': { currentValue: '-', target: 4 },
+                    '2': { currentValue: 4, target: 4 },
+                    '3': { currentValue: 3, target: 4 },
+                    '4': { currentValue: 3, target: 4 },
+                    '5': { currentValue: 0, target: 4 }
                 }
             },
             {
@@ -303,16 +334,16 @@
                         { score: 4, value: '>95%', color: 'text-green-500' },
                         { score: 3, value: '95%', color: 'text-blue-500' },
                         { score: 2, value: '<95%', color: 'text-amber-500' },
-                        { score: 1, value: '<90%', color: 'text-red-500' }
+                        { score: 1, value: '<90%', color: 'text-rose-500' } /* Changed to rose-500 */
                     ]
                 },
                 monthlyData: {
-                    '0': { currentValue: 97.5, target: 95 },
-                    '1': { currentValue: 94.0, target: 95 },
-                    '2': { currentValue: 96.5, target: 95 },
-                    '3': { currentValue: 98.0, target: 95 },
-                    '4': { currentValue: 95.0, target: 95 },
-                    '5': { currentValue: 93.5, target: 95 }
+                    '0': { currentValue: '-', target: 95 },
+                    '1': { currentValue: '-', target: 95 },
+                    '2': { currentValue: 98.83, target: 95 },
+                    '3': { currentValue: 99.01, target: 95 },
+                    '4': { currentValue: 97.88, target: 95 },
+                    '5': { currentValue: 0, target: 95 }
                 }
             }
         ];
@@ -439,9 +470,11 @@
 
         const kpiRiskSection = document.getElementById('kpi-risk-section');
         const quizSection = document.getElementById('quiz-section');
+        const documentFormsSection = document.getElementById('document-forms-section'); // New section element
 
         const navKpiRiskBtn = document.getElementById('nav-kpi-risk');
         const navQuizBtn = document.getElementById('nav-quiz');
+        const navDocumentFormsBtn = document.getElementById('nav-document-forms'); // New navigation button
 
         const grid = document.getElementById('kpi-grid');
         const modal = document.getElementById('kpi-modal');
@@ -557,18 +590,113 @@
                 }]
             });
         };
+
+        const createLineChart = (canvasId, labels, currentValues, targetValues, unit) => {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            if (lineChartInstance) {
+                lineChartInstance.destroy();
+            }
+
+            lineChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'ค่าปัจจุบัน',
+                            data: currentValues,
+                            borderColor: '#0284c7', /* Brighter blue for current value line */
+                            backgroundColor: 'rgba(2, 132, 199, 0.2)', /* Brighter blue for fill */
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#0284c7',
+                            pointBorderColor: '#fff',
+                            pointHoverRadius: 7,
+                            pointHoverBackgroundColor: '#0284c7',
+                            pointHoverBorderColor: '#fff'
+                        },
+                        {
+                            label: 'เป้าหมาย',
+                            data: targetValues,
+                            borderColor: '#14b8a6', /* Brighter green for target line */
+                            backgroundColor: 'rgba(20, 184, 166, 0.1)', /* Brighter green for fill */
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 0,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'Sarabun'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + unit;
+                                    }
+                                    return label;
+                                }
+                            },
+                            titleFont: { family: 'Sarabun', size: 14 },
+                            bodyFont: { family: 'Sarabun', size: 12 }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'เดือน',
+                                font: { family: 'Sarabun' }
+                            },
+                            ticks: {
+                                font: { family: 'Sarabun' }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: `ค่า (${unit})`,
+                                font: { family: 'Sarabun' }
+                            },
+                            ticks: {
+                                font: { family: 'Sarabun' }
+                            }
+                        }
+                    }
+                }
+            });
+        };
         
         const getPerformanceColor = (value, target, lowerIsBetter = false) => {
             if (lowerIsBetter) {
-                if (value <= target * 0.75) return '#28a745';
-                if (value <= target) return '#007bff';
-                if (value <= target * 1.25) return '#ffc107';
-                return '#dc3545';
+                if (value <= target * 0.75) return '#14b8a6'; /* Teal 500 */
+                if (value <= target) return '#0284c7'; /* Sky 600 */
+                if (value <= target * 1.25) return '#f59e0b'; /* Amber 500 */
+                return '#f43f5e'; /* Rose 500 */
             } else {
-                if (value >= target) return '#28a745';
-                if (value >= target * 0.9) return '#007bff';
-                if (value >= target * 0.8) return '#ffc107';
-                return '#dc3545';
+                if (value >= target) return '#14b8a6'; /* Teal 500 */
+                if (value >= target * 0.9) return '#0284c7'; /* Sky 600 */
+                if (value >= target * 0.8) return '#f59e0b'; /* Amber 500 */
+                return '#f43f5e'; /* Rose 500 */
             }
         };
         
@@ -612,13 +740,13 @@
 
                     if (change > 0) {
                         arrow = '▲';
-                        changeColor = kpi.lowerIsBetter ? 'text-red-600' : 'text-green-600';
+                        changeColor = kpi.lowerIsBetter ? 'text-rose-600' : 'text-emerald-600'; /* Brighter colors */
                     } else if (change < 0) {
                         arrow = '▼';
-                        changeColor = kpi.lowerIsBetter ? 'text-green-600' : 'text-red-600';
+                        changeColor = kpi.lowerIsBetter ? 'text-emerald-600' : 'text-rose-600'; /* Brighter colors */
                     }
 
-                    changeDisplay = `<span class="${changeColor} text-sm font-semibold ml-2">${arrow} ${Math.abs(percentageChange).toFixed(1)}%</span>`;
+                    changeDisplay = `<span class="${changeColor} text-sm font-semibold ml-2">${Math.abs(percentageChange).toFixed(1)}% ${arrow}</span>`; // Changed arrow position
                 }
 
 
@@ -631,10 +759,10 @@
                         vizHtml = `<div class="chart-container"><canvas id="${kpi.id}"></canvas></div>`;
                     } else {
                         vizHtml = `<div class="h-[150px] flex flex-col justify-center items-center">
-                                     <p class="kpi-value-lg font-bold text-gray-400">N/A</p>
-                                     <p class="text-gray-600 text-lg">${kpi.unit}</p>
-                                     <p class="text-gray-500">เป้าหมาย: N/A ${kpi.unit}</p>
-                                   </div>`;
+                                         <p class="kpi-value-lg font-bold text-gray-400">N/A</p>
+                                         <p class="text-gray-600 text-lg">${kpi.unit}</p>
+                                         <p class="text-gray-500">เป้าหมาย: N/A ${kpi.unit}</p>
+                                       </div>`;
                     }
                 } else {
                     const colorClass = (currentValue !== 'N/A' && targetValue !== 'N/A') ? getPerformanceColor(currentValue, targetValue, kpi.lowerIsBetter) : 'text-gray-400';
@@ -653,7 +781,7 @@
                     </div>
                     ${vizHtml}
                     <p class="mt-4 text-gray-500">${getStatusText(currentValue, targetValue, kpi.lowerIsBetter)}</p>
-                    <button data-id="${kpi.id}" class="details-btn mt-6 bg-blue-50 text-blue-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors">
+                    <button data-id="${kpi.id}" class="details-btn mt-6 bg-blue-200 text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-blue-300 transition-colors">
                         ดูรายละเอียด
                     </button>
                     <!-- Edit button is removed as Firebase functionality is commented out -->
@@ -691,7 +819,7 @@
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-600">เป้าหมาย:</p>
-                                <p class="text-lg font-bold ${kpi.lowerIsBetter ? 'text-blue-600' : 'text-green-600'}">
+                                <p class="text-lg font-bold ${kpi.lowerIsBetter ? 'text-blue-600' : 'text-emerald-600'}">
                                     ${kpi.lowerIsBetter ? 'ไม่เกิน ' : ''}${monthlyKpi ? monthlyKpi.target : 'N/A'} ${kpi.unit}
                                 </p>
                             </div>
@@ -838,9 +966,9 @@
             riskOpportunityGrid.innerHTML = '';
             riskOpportunityData.forEach(item => {
                 const card = document.createElement('div');
-                const typeColor = item.type === 'Risk' ? 'bg-red-50' : 'bg-green-50';
-                const textColor = item.type === 'Risk' ? 'text-red-700' : 'text-green-700';
-                const levelColor = item.level === 'สูง' ? 'text-red-600' : (item.level === 'ปานกลาง' ? 'text-orange-600' : 'text-green-600');
+                const typeColor = item.type === 'Risk' ? 'bg-rose-100' : 'bg-emerald-100'; /* Brighter colors */
+                const textColor = item.type === 'Risk' ? 'text-rose-700' : 'text-emerald-700'; /* Brighter colors */
+                const levelColor = item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600'); /* Brighter colors */
 
                 card.className = `bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105 ${typeColor}`;
                 card.innerHTML = `
@@ -880,7 +1008,7 @@
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-600">ระดับ ${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}:</p>
-                                <p class="text-xl font-bold ${item.level === 'สูง' ? 'text-red-600' : (item.level === 'ปานกลาง' ? 'text-orange-600' : 'text-green-600')}">${item.level}</p>
+                                <p class="text-xl font-bold ${item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600')}">${item.level}</p> /* Brighter colors */
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-600">มาตรการ:</p>
@@ -927,15 +1055,15 @@
                         {
                             label: 'ความเสี่ยง',
                             data: riskCounts,
-                            backgroundColor: '#dc3545',
-                            borderColor: '#dc3545',
+                            backgroundColor: '#f43f5e', /* Rose 500 */
+                            borderColor: '#f43f5e',
                             borderWidth: 1
                         },
                         {
                             label: 'โอกาส',
                             data: opportunityCounts,
-                            backgroundColor: '#28a745',
-                            borderColor: '#28a745',
+                            backgroundColor: '#10b981', /* Emerald 500 */
+                            borderColor: '#10b981',
                             borderWidth: 1
                         }
                     ]
@@ -1011,6 +1139,15 @@
             });
         };
 
+        // Function to open quiz in a popup
+        const openQuizPopup = (url) => {
+            const width = 800; // กำหนดความกว้างของหน้าต่างป๊อปอัป
+            const height = 600; // กำหนดความสูงของหน้าต่างป๊อปอัป
+            const left = (window.innerWidth / 2) - (width / 2);
+            const top = (window.innerHeight / 2) - (height / 2);
+            window.open(url, '_blank', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+        };
+
         // Initial render
         renderKpiCards(currentMonthIndex);
         renderRiskOpportunityCards();
@@ -1020,19 +1157,38 @@
         navKpiRiskBtn.addEventListener('click', () => {
             kpiRiskSection.classList.remove('section-hidden');
             quizSection.classList.add('section-hidden');
-            navKpiRiskBtn.classList.add('bg-blue-100', 'text-blue-700');
-            navKpiRiskBtn.classList.remove('bg-gray-100', 'text-gray-700');
-            navQuizBtn.classList.remove('bg-blue-100', 'text-blue-700');
-            navQuizBtn.classList.add('bg-gray-100', 'text-gray-700');
+            documentFormsSection.classList.add('section-hidden'); // Hide new section
+            navKpiRiskBtn.classList.add('bg-blue-300', 'text-blue-900'); /* Brighter active state */
+            navKpiRiskBtn.classList.remove('bg-blue-100', 'text-blue-700');
+            navQuizBtn.classList.remove('bg-blue-300', 'text-blue-900');
+            navQuizBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
+            navDocumentFormsBtn.classList.remove('bg-blue-300', 'text-blue-900');
+            navDocumentFormsBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
         });
 
         navQuizBtn.addEventListener('click', () => {
             kpiRiskSection.classList.add('section-hidden');
             quizSection.classList.remove('section-hidden');
-            navQuizBtn.classList.add('bg-blue-100', 'text-blue-700');
-            navQuizBtn.classList.remove('bg-gray-100', 'text-gray-700');
-            navKpiRiskBtn.classList.remove('bg-blue-100', 'text-blue-700');
-            navKpiRiskBtn.classList.add('bg-gray-100', 'text-gray-700');
+            documentFormsSection.classList.add('section-hidden'); // Hide new section
+            navQuizBtn.classList.add('bg-blue-300', 'text-blue-900'); /* Brighter active state */
+            navQuizBtn.classList.remove('bg-blue-100', 'text-blue-700');
+            navKpiRiskBtn.classList.remove('bg-blue-300', 'text-blue-900');
+            navKpiRiskBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
+            navDocumentFormsBtn.classList.remove('bg-blue-300', 'text-blue-900');
+            navDocumentFormsBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
+        });
+
+        // New navigation button event listener
+        navDocumentFormsBtn.addEventListener('click', () => {
+            kpiRiskSection.classList.add('section-hidden');
+            quizSection.classList.add('section-hidden');
+            documentFormsSection.classList.remove('section-hidden'); // Show new section
+            navDocumentFormsBtn.classList.add('bg-blue-300', 'text-blue-900'); /* Brighter active state */
+            navDocumentFormsBtn.classList.remove('bg-blue-100', 'text-blue-700');
+            navKpiRiskBtn.classList.remove('bg-blue-300', 'text-blue-900');
+            navKpiRiskBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
+            navQuizBtn.classList.remove('bg-blue-300', 'text-blue-900');
+            navQuizBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
         });
 
         monthSelect.addEventListener('change', (e) => {
@@ -1040,9 +1196,17 @@
             renderKpiCards(currentMonthIndex);
         });
 
+        // Add event listeners for quiz buttons
+        document.querySelectorAll('.quiz-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const quizUrl = e.currentTarget.dataset.quizUrl;
+                openQuizPopup(quizUrl);
+            });
+        });
+
         // Firebase initialization is commented out as per the provided context.
         // If Firebase is needed, uncomment initFirebase() and ensure firebaseConfig is correctly set.
-        // initFirebase();
+        // initFirebase(); // This line was causing the ReferenceError as initFirebase was not defined in this scope.
     </script>
 
 </body>

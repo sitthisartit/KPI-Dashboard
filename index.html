@@ -13,7 +13,11 @@
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
-            background-color: #e0f2fe; /* Brighter background: Light Sky Blue */
+            background-image: url('https://www.sahapvc1980.com/images/banner/pharma_phamapack0436_1.webp'); /* Placeholder background image */
+            background-size: cover; /* Cover the entire area */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-attachment: fixed; /* Keep background fixed when scrolling */
+            background-position: center center; /* Center the background image */
         }
         .chart-container {
             position: relative;
@@ -22,6 +26,13 @@
             height: 150px;
             max-height: 200px;
             margin: 0 auto;
+        }
+        /* New style for sparkline charts */
+        .sparkline-container {
+            position: relative;
+            width: 100%;
+            height: 80px; /* Increased height for more detail */
+            margin-top: 10px;
         }
         .chart-container-line {
             position: relative;
@@ -40,10 +51,13 @@
         .section-hidden {
             display: none;
         }
-        /* Removed .quiz-iframe and .document-iframe styles as iframes are no longer used for quizzes */
+        /* Added subtle text shadow for better readability on translucent backgrounds */
+        .text-shadow-subtle {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="text-white"> <!-- Main text color set to white for contrast on background image -->
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="fixed inset-0 bg-sky-50 bg-opacity-75 flex items-center justify-center z-[100]">
         <div class="flex flex-col items-center">
@@ -54,8 +68,8 @@
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8">
         <header class="text-center mb-10">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900">วัตถุประสงค์คุณภาพ (KPI)</h1>
-            <p class="text-xl text-gray-600 mt-2">แผนกคลังสินค้า ประจำปี 2568</p>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white">วัตถุประสงค์คุณภาพ (KPI)</h1> <!-- Header text white -->
+            <p class="text-xl text-white mt-2">แผนกคลังสินค้า ประจำปี 2568</p> <!-- Header text white -->
             <div class="w-24 h-1 bg-teal-500 mx-auto mt-4 rounded"></div> <!-- Brighter header line -->
         </header>
 
@@ -63,6 +77,9 @@
         <nav class="mb-8 flex justify-center space-x-6">
             <button id="nav-kpi-risk" class="text-lg font-semibold text-blue-900 hover:text-blue-900 transition-colors py-2 px-4 rounded-lg bg-blue-300 shadow-md">
                 KPI & ความเสี่ยง
+            </button>
+            <button id="nav-combined-trend" class="text-lg font-semibold text-blue-700 hover:text-blue-900 transition-colors py-2 px-4 rounded-lg bg-blue-100 shadow-md">
+                แนวโน้มรวม
             </button>
             <button id="nav-quiz" class="text-lg font-semibold text-blue-700 hover:text-blue-900 transition-colors py-2 px-4 rounded-lg bg-blue-100 shadow-md">
                 ข้อสอบ
@@ -74,8 +91,8 @@
 
         <section id="kpi-risk-section">
             <div class="mb-6 flex justify-center items-center">
-                <label for="month-select" class="mr-3 text-lg font-semibold text-gray-700">เลือกเดือน:</label>
-                <select id="month-select" class="p-2 border border-blue-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                <label for="month-select" class="mr-3 text-lg font-semibold text-white">เลือกเดือน:</label> <!-- Label text white -->
+                <select id="month-select" class="p-2 border border-blue-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-800"> <!-- Select options text remains gray-800 for readability -->
                 </select>
             </div>
 
@@ -83,26 +100,26 @@
             </main>
 
             <section class="mt-16">
-                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">การประเมินความเสี่ยงและโอกาส</h2>
-                <p class="text-lg text-gray-700 text-center mb-10 max-w-3xl mx-auto">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">การประเมินความเสี่ยงและโอกาส</h2> <!-- Section title text white -->
+                <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto"> <!-- Section description text white -->
                     ส่วนนี้แสดงการวิเคราะห์ความเสี่ยงและโอกาสที่สำคัญในแผนกคลังสินค้า โดยประเมินจากโอกาสที่จะเกิดขึ้นและผลกระทบ เพื่อให้เข้าใจถึงระดับความสำคัญและมาตรการที่จำเป็น
                 </p>
 
                 <div id="risk-opportunity-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-12">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">สรุประดับความเสี่ยงและโอกาส</h3>
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 mb-12"> <!-- Changed to bg-opacity-75 -->
+                    <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">สรุประดับความเสี่ยงและโอกาส</h3> <!-- Changed to text-black and added text-shadow-subtle -->
                     <div class="chart-container-line">
                         <canvas id="riskOpportunitySummaryChart"></canvas>
                     </div>
-                    <p class="text-center text-gray-600 mt-4">แผนภูมิแสดงการกระจายของระดับความเสี่ยงและโอกาสที่ประเมินได้ (วางเมาส์บนแท่งเพื่อดูรายละเอียด)</p>
+                    <p class="text-center text-gray-900 mt-4 text-shadow-subtle">แผนภูมิแสดงการกระจายของระดับความเสี่ยงและโอกาสที่ประเมินได้ (วางเมาส์บนแท่งเพื่อดูรายละเอียด)</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">ตารางจัดลำดับความเสี่ยงและโอกาส</h3>
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6"> <!-- Changed to bg-opacity-75 -->
+                    <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">ตารางจัดลำดับความเสี่ยงและโอกาส</h3> <!-- Changed to text-black and added text-shadow-subtle -->
                     <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <table class="min-w-full bg-white bg-opacity-75 border border-gray-200 rounded-lg"> <!-- Changed to bg-opacity-75 -->
                             <thead>
                                 <tr class="bg-blue-100 text-blue-800 uppercase text-sm leading-normal">
                                     <th class="py-3 px-6 text-left">ระดับคะแนน</th>
@@ -110,7 +127,7 @@
                                     <th class="py-3 px-6 text-left">การดำเนินงาน</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-gray-700 text-sm font-light">
+                            <tbody class="text-gray-900 text-sm font-light text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                                 <tr class="border-b border-gray-200 hover:bg-gray-100">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">1-5</td>
                                     <td class="py-3 px-6 text-left">ต่ำ</td>
@@ -133,30 +150,51 @@
             </section>
         </section>
 
+        <!-- Combined Trend Section (New) -->
+        <section id="combined-trend-section" class="mt-16 section-hidden">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แนวโน้มรวมของ KPI ทั้งหมด</h2>
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto">
+                แผนภูมิแสดงแนวโน้มรายเดือนของ KPI ทั้งหมด เพื่อการวิเคราะห์ภาพรวมและแนวโน้มในระยะยาว
+            </p>
+            <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 mb-8"> <!-- Added mb-8 for spacing -->
+                <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">แนวโน้ม KPI อื่นๆ</h3>
+                <div class="chart-container-line h-[400px]">
+                    <canvas id="combinedTrendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6">
+                <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">แนวโน้มข้อผิดพลาดในกระบวนการทำงาน</h3>
+                <div class="chart-container-line h-[400px]">
+                    <canvas id="processErrorsTrendChart"></canvas>
+                </div>
+            </div>
+        </section>
+
         <!-- Quiz Section -->
         <section id="quiz-section" class="mt-16 section-hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">แบบทดสอบสำหรับตำแหน่งต่างๆ</h2>
-            <p class="text-lg text-gray-700 text-center mb-10 max-w-3xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แบบทดสอบสำหรับตำแหน่งต่างๆ</h2> <!-- Section title text white -->
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto"> <!-- Section description text white -->
                 เลือกแบบทดสอบตามตำแหน่งที่คุณต้องการฝึกฝนความรู้ความเข้าใจ
             </p>
 
             <div class="space-y-12">
-                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">1. แบบทดสอบพนักงานเก็บสินค้าในไลน์ผลิต</h3>
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">1. แบบทดสอบพนักงานเก็บสินค้าในไลน์ผลิต</h3> <!-- Changed to text-black and added text-shadow-subtle -->
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/GjgDKJ7Pqi8vvpRE7">
                         ทำแบบทดสอบ
                     </button>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">2. แบบทดสอบพนักงานจัดเตรียมสินค้าส่งออก</h3>
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">2. แบบทดสอบพนักงานจัดเตรียมสินค้าส่งออก</h3> <!-- Changed to text-black and added text-shadow-subtle -->
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/MwdmKPsZYuHBajU17">
                         ทำแบบทดสอบ
                     </button>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">3. แบบทดสอบพนักงานเบิกจ่ายวัสดุประกอบ</h3>
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">3. แบบทดสอบพนักงานเบิกจ่ายวัสดุประกอบ</h3> <!-- Changed to text-black and added text-shadow-subtle -->
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/3f9x5tjSKQ2ZgZj8A">
                         ทำแบบทดสอบ
                     </button>
@@ -166,15 +204,15 @@
 
         <!-- Document Forms Section (New) -->
         <section id="document-forms-section" class="mt-16 section-hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">แบบฟอร์มเอกสารในแผนก</h2>
-            <p class="text-lg text-gray-700 text-center mb-10 max-w-3xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แบบฟอร์มเอกสารในแผนก</h2> <!-- Section title text white -->
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto"> <!-- Section description text white -->
                 ส่วนนี้จะรวบรวมแบบฟอร์มเอกสารที่สำคัญสำหรับการปฏิบัติงานในแผนกคลังสินค้า
             </p>
 
             <div class="space-y-6">
-                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">วัตถุประสงค์คุณภาพ (KPI) แผนกคลังสินค้า (saha p.v.c.1980)</h3>
-                    <p class="text-gray-600 mb-4">
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
+                    <h3 class="text-2xl font-bold text-black mb-4 text-shadow-subtle">วัตถุประสงค์คุณภาพ (KPI) แผนกคลังสินค้า (saha p.v.c.1980)</h3> <!-- Changed to text-black and added text-shadow-subtle -->
+                    <p class="text-gray-900 mb-4 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                         (เอกสารนี้เป็น Google Sheet)
                     </p>
                     <a href="https://docs.google.com/spreadsheets/d/1a6DdbnbNaNLjXZg4MncuK9mwOWlrwTQizzngf27TgLg/edit?usp=sharing" target="_blank" class="inline-block bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors shadow-md">
@@ -182,12 +220,12 @@
                     </a>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-lg p-6 text-center text-gray-700">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">เพิ่มแบบฟอร์มเอกสารอื่นๆ</h3>
-                    <p class="text-xl mb-4">
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">เพิ่มแบบฟอร์มเอกสารอื่นๆ</h3> <!-- Changed to text-black and added text-shadow-subtle -->
+                    <p class="text-xl text-gray-900 mb-4 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                         หากคุณต้องการเพิ่มแบบฟอร์มเอกสารอื่นๆ กรุณาอัปโหลดไฟล์ไปยัง Google Drive และทำตามขั้นตอนการรับลิงก์สำหรับแชร์
                     </p>
-                    <p class="text-gray-600 mt-4">
+                    <p class="text-gray-900 mt-4 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                         จากนั้นแจ้งชื่อแบบฟอร์มและ **ลิงก์ Google Drive** มาให้ผมได้เลยครับ ผมจะช่วยเพิ่มลงในหน้านี้ให้
                     </p>
                 </div>
@@ -199,12 +237,12 @@
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0">
             <div class="modal-content overflow-y-auto p-6">
                 <div class="flex justify-between items-start mb-4">
-                    <h2 id="modal-title" class="text-2xl font-bold text-gray-900"></h2>
+                    <h2 id="modal-title" class="text-2xl font-bold text-black text-shadow-subtle"></h2> <!-- Changed to text-black and added text-shadow-subtle -->
                     <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-                <div id="modal-body" class="space-y-4 text-gray-700">
+                <div id="modal-body" class="space-y-4 text-gray-900 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                 </div>
             </div>
         </div>
@@ -214,12 +252,12 @@
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0">
             <div class="modal-content overflow-y-auto p-6">
                 <div class="flex justify-between items-start mb-4">
-                    <h2 id="ro-modal-title" class="text-2xl font-bold text-gray-900"></h2>
+                    <h2 id="ro-modal-title" class="text-2xl font-bold text-black text-shadow-subtle"></h2> <!-- Changed to text-black and added text-shadow-subtle -->
                     <button id="ro-modal-close-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-                <div id="ro-modal-body" class="space-y-4 text-gray-700">
+                <div id="ro-modal-body" class="space-y-4 text-gray-900 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                 </div>
             </div>
         </div>
@@ -337,7 +375,7 @@
                         { score: 1, value: '<90%', color: 'text-rose-500' } /* Changed to rose-500 */
                     ]
                 },
-                monthlyData: {
+                 monthlyData: {
                     '0': { currentValue: '-', target: 95 },
                     '1': { currentValue: '-', target: 95 },
                     '2': { currentValue: 98.83, target: 95 },
@@ -467,12 +505,16 @@
         const kpiCharts = {};
         let lineChartInstance = null;
         let roSummaryChartInstance = null;
+        let combinedTrendChartInstance = null; // Chart.js instance for combined trend
+        let processErrorsTrendChartInstance = null; // New Chart.js instance for process errors trend
 
         const kpiRiskSection = document.getElementById('kpi-risk-section');
+        const combinedTrendSection = document.getElementById('combined-trend-section'); // New section element
         const quizSection = document.getElementById('quiz-section');
         const documentFormsSection = document.getElementById('document-forms-section'); // New section element
 
         const navKpiRiskBtn = document.getElementById('nav-kpi-risk');
+        const navCombinedTrendBtn = document.getElementById('nav-combined-trend'); // New navigation button
         const navQuizBtn = document.getElementById('nav-quiz');
         const navDocumentFormsBtn = document.getElementById('nav-document-forms'); // New navigation button
 
@@ -551,6 +593,7 @@
                 }]
             };
 
+            // ทำลาย Chart เก่าก่อนสร้างใหม่ เพื่อป้องกันปัญหา memory leaks
             if (kpiCharts[canvasId]) {
                 kpiCharts[canvasId].destroy();
             }
@@ -567,27 +610,102 @@
                         legend: { display: false }
                     },
                     animation: {
-                       animateRotate: false
+                       animateRotate: false // แอนิเมชันการเติบโตเท่านั้น ไม่ใช่การหมุน
                     }
                 },
-                plugins: [{
+                 plugins: [{
                     id: 'textCenter',
                     afterDraw: (chart) => {
                         let ctx = chart.ctx;
                         ctx.save();
                         let centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
-                        let centerY = (chart.chartArea.top + chart.chartArea.bottom) / 1.5;
-                        ctx.fillStyle = '#212529';
+                        let centerY = (chart.chartArea.top + chart.chartArea.bottom) / 1.5; // ปรับ Y สำหรับตำแหน่งข้อความ
+                        ctx.fillStyle = '#000000'; // Changed to black
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'baseline';
                         ctx.font = 'bold 2.5rem Sarabun';
                         ctx.fillText(value + unit, centerX, centerY);
                         ctx.font = 'normal 1rem Sarabun';
-                        ctx.fillStyle = '#6c757d';
+                        ctx.fillStyle = '#000000'; // Changed to black
                         ctx.fillText(`เป้าหมาย: ${target}${unit}`, centerX, centerY + 24);
                         ctx.restore();
                     }
                 }]
+            });
+        };
+
+        const createSparklineChart = (canvasId, currentValues, targetValues, unit, lineColorForCurrent) => {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            // Destroy existing chart instance if it exists
+            if (kpiCharts[canvasId]) {
+                kpiCharts[canvasId].destroy();
+            }
+
+            const labels = monthNames.slice(Math.max(0, currentMonthIndex - 5), currentMonthIndex + 1); // Last 6 months
+
+            kpiCharts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'ค่าปัจจุบัน',
+                            data: currentValues,
+                            borderColor: lineColorForCurrent,
+                            backgroundColor: lineColorForCurrent + '40', // Add some transparency for fill
+                            borderWidth: 2,
+                            pointRadius: 3, // Show points
+                            tension: 0.4, // Smooth line
+                            fill: true
+                        },
+                        {
+                            label: 'เป้าหมาย',
+                            data: targetValues,
+                            borderColor: '#14b8a6', // A distinct color for target, e.g., emerald
+                            backgroundColor: 'rgba(0,0,0,0)', // No fill for target
+                            borderWidth: 1,
+                            pointRadius: 0, // No points for target
+                            borderDash: [2, 2], // Dashed line for target
+                            tension: 0.4,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        x: {
+                            display: true, // Show x-axis
+                            grid: { display: false }, // Hide grid lines
+                            ticks: {
+                                font: { size: 8, family: 'Sarabun' },
+                                maxRotation: 0,
+                                minRotation: 0,
+                                color: '#000000' // Black color for ticks
+                            }
+                        },
+                        y: {
+                            display: true, // Show y-axis labels
+                            grid: { display: false }, // Hide grid lines
+                            ticks: {
+                                font: { size: 8, family: 'Sarabun' },
+                                color: '#000000' // Black color for ticks
+                            }
+                        }
+                    },
+                    elements: {
+                        line: {
+                            borderCapStyle: 'round'
+                        }
+                    }
+                }
             });
         };
 
@@ -638,7 +756,8 @@
                             position: 'top',
                             labels: {
                                 font: {
-                                    family: 'Sarabun'
+                                    family: 'Sarabun',
+                                    color: '#000000' // Set legend label color to black
                                 }
                             }
                         },
@@ -664,10 +783,10 @@
                             title: {
                                 display: true,
                                 text: 'เดือน',
-                                font: { family: 'Sarabun' }
+                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis title color to black
                             },
                             ticks: {
-                                font: { family: 'Sarabun' }
+                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis tick color to black
                             }
                         },
                         y: {
@@ -675,10 +794,10 @@
                             title: {
                                 display: true,
                                 text: `ค่า (${unit})`,
-                                font: { family: 'Sarabun' }
+                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis title color to black
                             },
                             ticks: {
-                                font: { family: 'Sarabun' }
+                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis tick color to black
                             }
                         }
                     }
@@ -730,8 +849,8 @@
                 const currentValue = monthlyKpi ? monthlyKpi.currentValue : 'N/A';
                 const targetValue = monthlyKpi ? monthlyKpi.target : 'N/A';
 
-                let changeDisplay = '';
-                if (currentValue !== 'N/A' && prevMonthlyKpi && prevMonthlyKpi.currentValue !== 'N/A') {
+                let changeIndicatorHtml = '';
+                if (currentValue !== 'N/A' && prevMonthlyKpi && prevMonthlyKpi.currentValue !== 'N/A' && prevMonthlyKpi.currentValue !== 0) {
                     const change = currentValue - prevMonthlyKpi.currentValue;
                     const percentageChange = (change / prevMonthlyKpi.currentValue) * 100;
                     
@@ -740,18 +859,19 @@
 
                     if (change > 0) {
                         arrow = '▲';
-                        changeColor = kpi.lowerIsBetter ? 'text-rose-600' : 'text-emerald-600'; /* Brighter colors */
+                        changeColor = kpi.lowerIsBetter ? 'text-rose-600' : 'text-emerald-600'; // If lower is better, increase is bad (rose). If higher is better, increase is good (emerald).
                     } else if (change < 0) {
                         arrow = '▼';
-                        changeColor = kpi.lowerIsBetter ? 'text-emerald-600' : 'text-rose-600'; /* Brighter colors */
+                        changeColor = kpi.lowerIsBetter ? 'text-emerald-600' : 'text-rose-600'; // If lower is better, decrease is good (emerald). If higher is better, decrease is bad (rose).
                     }
 
-                    changeDisplay = `<span class="${changeColor} text-sm font-semibold ml-2">${Math.abs(percentageChange).toFixed(1)}% ${arrow}</span>`; // Changed arrow position
+                    changeIndicatorHtml = `<span class="${changeColor} text-shadow-subtle">${Math.abs(percentageChange).toFixed(1)}% ${arrow}</span>`;
                 }
 
 
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105';
+                // Added bg-opacity-75 for transparency
+                card.className = 'bg-white bg-opacity-75 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105';
                 
                 let vizHtml = '';
                 if (kpi.type === 'percentage') {
@@ -759,28 +879,44 @@
                         vizHtml = `<div class="chart-container"><canvas id="${kpi.id}"></canvas></div>`;
                     } else {
                         vizHtml = `<div class="h-[150px] flex flex-col justify-center items-center">
-                                         <p class="kpi-value-lg font-bold text-gray-400">N/A</p>
-                                         <p class="text-gray-600 text-lg">${kpi.unit}</p>
-                                         <p class="text-gray-500">เป้าหมาย: N/A ${kpi.unit}</p>
+                                         <p class="kpi-value-lg font-bold text-gray-400 text-shadow-subtle">N/A</p>
+                                         <p class="text-gray-900 text-lg text-shadow-subtle">${kpi.unit}</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                         <p class="text-gray-900 text-shadow-subtle">เป้าหมาย: N/A ${kpi.unit}</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                                        </div>`;
                     }
                 } else {
                     const colorClass = (currentValue !== 'N/A' && targetValue !== 'N/A') ? getPerformanceColor(currentValue, targetValue, kpi.lowerIsBetter) : 'text-gray-400';
                     vizHtml = `<div class="h-[150px] flex flex-col justify-center items-center">
-                                 <p class="kpi-value-lg font-bold" style="color: ${colorClass};">${currentValue}</p>
-                                 <p class="text-gray-600 text-lg">${kpi.unit}</p>
-                                 <p class="text-gray-500">เป้าหมาย: ${kpi.lowerIsBetter ? '≤ ' : ''}${targetValue} ${kpi.unit}</p>
+                                 <p class="kpi-value-lg font-bold text-shadow-subtle" style="color: ${colorClass};">${currentValue}</p>
+                                 <p class="text-gray-900 text-lg text-shadow-subtle">${kpi.unit}</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                 <p class="text-gray-900 text-shadow-subtle">เป้าหมาย: ${kpi.lowerIsBetter ? '≤ ' : ''}${targetValue} ${kpi.unit}</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                                </div>`;
                 }
 
+                // Prepare data for sparkline (last 6 months)
+                const sparklineCurrentValues = [];
+                const sparklineTargetValues = [];
+                for (let i = Math.max(0, monthIndex - 5); i <= monthIndex; i++) {
+                    sparklineCurrentValues.push(kpi.monthlyData[i] ? kpi.monthlyData[i].currentValue : null);
+                    sparklineTargetValues.push(kpi.monthlyData[i] ? kpi.monthlyData[i].target : null);
+                }
+                const sparklineColor = getPerformanceColor(currentValue, targetValue, kpi.lowerIsBetter);
+
+
                 card.innerHTML = `
-                    <h2 class="text-xl font-bold mb-2 text-gray-800">${kpi.title}</h2>
-                    <div class="flex items-center justify-center mb-4">
-                        <p class="text-base text-gray-600">เดือนก่อนหน้า:</p>
-                        ${changeDisplay}
+                    <h2 class="text-xl font-bold mb-2 text-black text-shadow-subtle">${kpi.title}</h2>
+                    <div class="flex flex-col items-center justify-center mb-4">
+                        <div class="flex items-center justify-center mb-1">
+                            <p class="text-base text-gray-900 text-shadow-subtle">เดือนปัจจุบัน:</p>
+                            <span class="text-gray-900 text-shadow-subtle ml-2">${currentValue} ${kpi.unit}</span>
+                        </div>
+                        ${changeIndicatorHtml ? `<p class="text-base text-gray-900 text-shadow-subtle">เดือนก่อนหน้า: ${changeIndicatorHtml}</p>` : `<p class="text-base text-gray-900 text-shadow-subtle">เดือนก่อนหน้า: ไม่มีข้อมูล</p>`}
                     </div>
                     ${vizHtml}
-                    <p class="mt-4 text-gray-500">${getStatusText(currentValue, targetValue, kpi.lowerIsBetter)}</p>
+                    <div class="sparkline-container">
+                        <canvas id="${kpi.id}-sparkline"></canvas>
+                    </div>
+                    <p class="mt-4 text-gray-900 text-shadow-subtle">${getStatusText(currentValue, targetValue, kpi.lowerIsBetter)}</p>
                     <button data-id="${kpi.id}" class="details-btn mt-6 bg-blue-200 text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-blue-300 transition-colors">
                         ดูรายละเอียด
                     </button>
@@ -791,6 +927,8 @@
                 if (kpi.type === 'percentage' && currentValue !== 'N/A' && targetValue !== 'N/A') {
                     setTimeout(() => createGaugeChart(kpi.id, currentValue, targetValue, kpi.unit), 0);
                 }
+                // Render sparkline for all KPIs
+                setTimeout(() => createSparklineChart(kpi.id + '-sparkline', sparklineCurrentValues, sparklineTargetValues, kpi.unit, sparklineColor), 0);
             });
 
             document.querySelectorAll('.details-btn').forEach(button => {
@@ -798,7 +936,7 @@
                     const kpiId = e.currentTarget.dataset.id;
                     // Use defaultKpiStructure if kpiDataFromFirestore is empty
                     const kpi = (kpiDataFromFirestore.length > 0 ? kpiDataFromFirestore : defaultKpiStructure).find(k => k.id === kpiId);
-                    const monthlyKpi = kpi.monthlyData[monthIndex];
+                    const monthlyKpi = kpi.monthlyData[currentMonthIndex];
 
                     const chartLabels = [];
                     const chartCurrentValues = [];
@@ -814,36 +952,36 @@
                     modalBody.innerHTML = `
                         <div class="space-y-3">
                             <div>
-                                <p class="font-semibold text-gray-600">ดัชนีชี้วัด:</p>
-                                <p>${kpi.details.indicator}</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ดัชนีชี้วัด:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-shadow-subtle">${kpi.details.indicator}</p> <!-- Added text-shadow-subtle -->
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-600">เป้าหมาย:</p>
-                                <p class="text-lg font-bold ${kpi.lowerIsBetter ? 'text-blue-600' : 'text-emerald-600'}">
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">เป้าหมาย:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-lg font-bold ${kpi.lowerIsBetter ? 'text-blue-600' : 'text-emerald-600'} text-shadow-subtle">
                                     ${kpi.lowerIsBetter ? 'ไม่เกิน ' : ''}${monthlyKpi ? monthlyKpi.target : 'N/A'} ${kpi.unit}
                                 </p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-600">ความถี่ในการประเมิน:</p>
-                                <p>${kpi.details.frequency}</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ความถี่ในการประเมิน:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-shadow-subtle">${kpi.details.frequency}</p> <!-- Added text-shadow-subtle -->
                             </div>
                              <div>
-                                <p class="font-semibold text-gray-600">วิธีการประเมิน:</p>
-                                <p class="text-sm">${kpi.details.evaluation}</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">วิธีการประเมิน:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-sm text-shadow-subtle">${kpi.details.evaluation}</p> <!-- Added text-shadow-subtle -->
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-600">เกณฑ์การให้คะแนน:</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">เกณฑ์การให้คะแนน:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
                                 <ul class="list-none space-y-1 mt-1">
                                     ${kpi.details.levels.map(l => `
                                         <li class="flex items-center justify-between p-2 rounded-md bg-gray-50">
-                                            <span class="font-semibold ${l.color}">ระดับ ${l.score}</span>
-                                            <span>${l.value}</span>
+                                            <span class="font-semibold ${l.color} text-shadow-subtle">ระดับ ${l.score}</span>
+                                            <span class="text-shadow-subtle">${l.value}</span>
                                         </li>
                                     `).join('')}
                                 </ul>
                             </div>
                             <div class="mt-6">
-                                <h3 class="text-xl font-semibold mb-3 text-gray-800">แนวโน้มรายเดือน</h3>
+                                <h3 class="text-xl font-semibold mb-3 text-black text-shadow-subtle">แนวโน้มรายเดือน</h3> <!-- Changed to text-black and added text-shadow-subtle -->
                                 <div class="chart-container-line">
                                     <canvas id="kpiLineChart"></canvas>
                                 </div>
@@ -970,11 +1108,12 @@
                 const textColor = item.type === 'Risk' ? 'text-rose-700' : 'text-emerald-700'; /* Brighter colors */
                 const levelColor = item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600'); /* Brighter colors */
 
-                card.className = `bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105 ${typeColor}`;
+                // Changed to bg-opacity-75 for transparency
+                card.className = `bg-white bg-opacity-75 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105 ${typeColor}`;
                 card.innerHTML = `
-                    <div class="text-lg font-bold mb-2 ${textColor}">${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}</div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-800">${item.issue}</h3>
-                    <p class="text-2xl font-bold ${levelColor} mb-4">ระดับ: ${item.level}</p>
+                    <div class="text-lg font-bold mb-2 ${textColor} text-shadow-subtle">${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}</div> <!-- Added text-shadow-subtle -->
+                    <h3 class="text-xl font-bold mb-3 text-black text-shadow-subtle">${item.issue}</h3> <!-- Changed to text-black and added text-shadow-subtle -->
+                    <p class="text-2xl font-bold ${levelColor} mb-4 text-shadow-subtle">ระดับ: ${item.level}</p> <!-- Added text-shadow-subtle -->
                     <button data-id="${item.id}" class="ro-details-btn mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
                         ดูรายละเอียด
                     </button>
@@ -991,28 +1130,28 @@
                     roModalBody.innerHTML = `
                         <div class="space-y-3">
                             <div>
-                                <p class="font-semibold text-gray-600">ประเด็น:</p>
-                                <p>${item.issue}</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ประเด็น:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-shadow-subtle">${item.issue}</p> <!-- Added text-shadow-subtle -->
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-600">สาเหตุ:</p>
-                                <p>${item.cause}</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">สาเหตุ:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-shadow-subtle">${item.cause}</p> <!-- Added text-shadow-subtle -->
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-600">โอกาสที่จะเกิดขึ้น (ระดับ ${item.likelihood_score}):</p>
-                                <p>${item.likelihood_desc}</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">โอกาสที่จะเกิดขึ้น (ระดับ ${item.likelihood_score}):</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-shadow-subtle">${item.likelihood_desc}</p> <!-- Added text-shadow-subtle -->
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-600">ผลกระทบ (ระดับ ${item.impact_score}):</p>
-                                <p>${item.impact_desc}</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ผลกระทบ (ระดับ ${item.impact_score}):</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-shadow-subtle">${item.impact_desc}</p> <!-- Added text-shadow-subtle -->
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-600">ระดับ ${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}:</p>
-                                <p class="text-xl font-bold ${item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600')}">${item.level}</p> /* Brighter colors */
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ระดับ ${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-xl font-bold ${item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600')} text-shadow-subtle">${item.level}</p> <!-- Added text-shadow-subtle -->
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-600">มาตรการ:</p>
-                                <p>${item.mitigation}</p>
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">มาตรการ:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="text-shadow-subtle">${item.mitigation}</p> <!-- Added text-shadow-subtle -->
                             </div>
                         </div>
                     `;
@@ -1076,7 +1215,8 @@
                             position: 'top',
                             labels: {
                                 font: {
-                                    family: 'Sarabun'
+                                    family: 'Sarabun',
+                                    color: '#000000' // Set legend label color to black
                                 }
                             }
                         },
@@ -1116,10 +1256,10 @@
                             title: {
                                 display: true,
                                 text: 'ระดับ',
-                                font: { family: 'Sarabun' }
+                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis title color to black
                             },
                             ticks: {
-                                font: { family: 'Sarabun' }
+                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis tick color to black
                             }
                         },
                         y: {
@@ -1127,16 +1267,233 @@
                             title: {
                                 display: true,
                                 text: 'จำนวน',
-                                font: { family: 'Sarabun' }
+                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis title color to black
                             },
                             ticks: {
                                 stepSize: 1,
-                                font: { family: 'Sarabun' }
+                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis tick color to black
                             }
                         }
                     }
                 }
             });
+        };
+
+        const renderCombinedTrendSummaryChart = () => {
+            const combinedCtx = document.getElementById('combinedTrendChart');
+            const processErrorsCtx = document.getElementById('processErrorsTrendChart');
+
+            if (!combinedCtx || !processErrorsCtx) return;
+
+            if (combinedTrendChartInstance) {
+                combinedTrendChartInstance.destroy();
+            }
+            if (processErrorsTrendChartInstance) {
+                processErrorsTrendChartInstance.destroy();
+            }
+
+            // Use defaultKpiStructure if kpiDataFromFirestore is empty
+            const kpiDataToUse = kpiDataFromFirestore.length > 0 ? kpiDataFromFirestore : defaultKpiStructure;
+
+            // Separate Process Errors KPI
+            const processErrorsKpi = kpiDataToUse.find(kpi => kpi.id === 'processErrors');
+            const otherKpis = kpiDataToUse.filter(kpi => kpi.id !== 'processErrors');
+
+            // --- Render Combined Trend Chart for Other KPIs ---
+            const otherKpiDatasets = otherKpis.map((kpi, index) => {
+                const currentValues = [];
+                for (let i = 0; i < 12; i++) {
+                    const monthData = kpi.monthlyData[i.toString()];
+                    currentValues.push(monthData ? monthData.currentValue : null);
+                }
+
+                // Define a set of distinct colors for each KPI line
+                const colors = [
+                    '#0284c7', // Sky Blue
+                    '#14b8a6', // Teal
+                    '#f59e0b', // Amber
+                    '#8b5cf6', // Violet
+                    '#ec4899', // Pink
+                    '#22c55e', // Green
+                    '#eab308'  // Yellow
+                ];
+                const lineColor = colors[index % colors.length];
+
+                return {
+                    label: kpi.title + ' (ค่าปัจจุบัน)',
+                    data: currentValues,
+                    borderColor: lineColor,
+                    backgroundColor: lineColor + '20', // Light transparent fill
+                    fill: false,
+                    tension: 0.3,
+                    pointRadius: 3,
+                    pointBackgroundColor: lineColor,
+                    pointBorderColor: '#fff',
+                    pointHoverRadius: 5
+                };
+            });
+
+            combinedTrendChartInstance = new Chart(combinedCtx, {
+                type: 'line',
+                data: {
+                    labels: monthNames,
+                    datasets: otherKpiDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'Sarabun',
+                                    color: '#000000' // Set legend label color to black
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        // Find the corresponding KPI to get its unit
+                                        const kpiTitle = label.substring(0, label.indexOf('(')).trim();
+                                        const kpi = otherKpis.find(k => k.title === kpiTitle);
+                                        label += context.parsed.y + (kpi ? kpi.unit : '');
+                                    }
+                                    return label;
+                                }
+                            },
+                            titleFont: { family: 'Sarabun', size: 14 },
+                            bodyFont: { family: 'Sarabun', size: 12 }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'เดือน',
+                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis title color to black
+                            },
+                            ticks: {
+                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis tick color to black
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'ค่า',
+                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis title color to black
+                            },
+                            ticks: {
+                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis tick color to black
+                            }
+                        }
+                    }
+                }
+            });
+
+            // --- Render Process Errors Trend Chart ---
+            if (processErrorsKpi) {
+                const processErrorsCurrentValues = [];
+                const processErrorsTargetValues = [];
+                for (let i = 0; i < 12; i++) {
+                    const monthData = processErrorsKpi.monthlyData[i.toString()];
+                    processErrorsCurrentValues.push(monthData ? monthData.currentValue : null);
+                    processErrorsTargetValues.push(monthData ? processErrorsKpi.target : null); // Assuming target is static for now, or fetch from monthlyData if it varies.
+                }
+
+                processErrorsTrendChartInstance = new Chart(processErrorsCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthNames,
+                        datasets: [
+                            {
+                                label: processErrorsKpi.title + ' (ค่าปัจจุบัน)',
+                                data: processErrorsCurrentValues,
+                                borderColor: '#ef4444', // Red for errors
+                                backgroundColor: '#ef4444' + '20',
+                                fill: true, // Fill area for errors might be good
+                                tension: 0.3,
+                                pointRadius: 3,
+                                pointBackgroundColor: '#ef4444',
+                                pointBorderColor: '#fff',
+                                pointHoverRadius: 5
+                            },
+                            {
+                                label: processErrorsKpi.title + ' (เป้าหมาย)',
+                                data: processErrorsTargetValues,
+                                borderColor: '#14b8a6', // Teal for target
+                                backgroundColor: 'rgba(0,0,0,0)',
+                                fill: false,
+                                tension: 0.3,
+                                pointRadius: 0,
+                                borderDash: [5, 5]
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        family: 'Sarabun',
+                                        color: '#000000'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y + processErrorsKpi.unit;
+                                        }
+                                        return label;
+                                    }
+                                },
+                                titleFont: { family: 'Sarabun', size: 14 },
+                                bodyFont: { family: 'Sarabun', size: 12 }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'เดือน',
+                                    font: { family: 'Sarabun', color: '#000000' }
+                                },
+                                ticks: {
+                                    font: { family: 'Sarabun', color: '#000000' }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: `ค่า (${processErrorsKpi.unit})`,
+                                    font: { family: 'Sarabun', color: '#000000' }
+                                },
+                                ticks: {
+                                    stepSize: 1, // Assuming error counts are integers
+                                    font: { family: 'Sarabun', color: '#000000' }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         };
 
         // Function to open quiz in a popup
@@ -1148,59 +1505,71 @@
             window.open(url, '_blank', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
         };
 
-        // Initial render
-        renderKpiCards(currentMonthIndex);
-        renderRiskOpportunityCards();
-        renderRiskOpportunitySummaryChart();
-
         // Navigation logic
+        const activateNavButton = (buttonId) => {
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-blue-300', 'text-blue-900');
+                btn.classList.add('bg-blue-100', 'text-blue-700');
+            });
+            document.getElementById(buttonId).classList.remove('bg-blue-100', 'text-blue-700');
+            document.getElementById(buttonId).classList.add('bg-blue-300', 'text-blue-900');
+        };
+
         navKpiRiskBtn.addEventListener('click', () => {
             kpiRiskSection.classList.remove('section-hidden');
+            combinedTrendSection.classList.add('section-hidden');
             quizSection.classList.add('section-hidden');
-            documentFormsSection.classList.add('section-hidden'); // Hide new section
-            navKpiRiskBtn.classList.add('bg-blue-300', 'text-blue-900'); /* Brighter active state */
-            navKpiRiskBtn.classList.remove('bg-blue-100', 'text-blue-700');
-            navQuizBtn.classList.remove('bg-blue-300', 'text-blue-900');
-            navQuizBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
-            navDocumentFormsBtn.classList.remove('bg-blue-300', 'text-blue-900');
-            navDocumentFormsBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
+            documentFormsSection.classList.add('section-hidden');
+            activateNavButton('nav-kpi-risk');
+        });
+
+        navCombinedTrendBtn.addEventListener('click', () => {
+            kpiRiskSection.classList.add('section-hidden');
+            combinedTrendSection.classList.remove('section-hidden');
+            quizSection.classList.add('section-hidden');
+            documentFormsSection.classList.add('section-hidden');
+            activateNavButton('nav-combined-trend');
+            renderCombinedTrendSummaryChart(); // Render when navigating to this section
         });
 
         navQuizBtn.addEventListener('click', () => {
             kpiRiskSection.classList.add('section-hidden');
+            combinedTrendSection.classList.add('section-hidden');
             quizSection.classList.remove('section-hidden');
-            documentFormsSection.classList.add('section-hidden'); // Hide new section
-            navQuizBtn.classList.add('bg-blue-300', 'text-blue-900'); /* Brighter active state */
-            navQuizBtn.classList.remove('bg-blue-100', 'text-blue-700');
-            navKpiRiskBtn.classList.remove('bg-blue-300', 'text-blue-900');
-            navKpiRiskBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
-            navDocumentFormsBtn.classList.remove('bg-blue-300', 'text-blue-900');
-            navDocumentFormsBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
+            documentFormsSection.classList.add('section-hidden');
+            activateNavButton('nav-quiz');
         });
 
         // New navigation button event listener
         navDocumentFormsBtn.addEventListener('click', () => {
             kpiRiskSection.classList.add('section-hidden');
+            combinedTrendSection.classList.add('section-hidden');
             quizSection.classList.add('section-hidden');
-            documentFormsSection.classList.remove('section-hidden'); // Show new section
-            navDocumentFormsBtn.classList.add('bg-blue-300', 'text-blue-900'); /* Brighter active state */
-            navDocumentFormsBtn.classList.remove('bg-blue-100', 'text-blue-700');
-            navKpiRiskBtn.classList.remove('bg-blue-300', 'text-blue-900');
-            navKpiRiskBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
-            navQuizBtn.classList.remove('bg-blue-300', 'text-blue-900');
-            navQuizBtn.classList.add('bg-blue-100', 'text-blue-700'); /* Brighter inactive state */
+            documentFormsSection.classList.remove('section-hidden');
+            activateNavButton('nav-document-forms');
         });
 
-        monthSelect.addEventListener('change', (e) => {
-            currentMonthIndex = parseInt(e.target.value);
+        // Activate initial button
+        // Initial render (moved inside DOMContentLoaded)
+        document.addEventListener('DOMContentLoaded', () => {
             renderKpiCards(currentMonthIndex);
-        });
+            renderRiskOpportunityCards();
+            renderRiskOpportunitySummaryChart();
+            // renderCombinedTrendSummaryChart(); // This will be called when the navigation button is clicked
 
-        // Add event listeners for quiz buttons
-        document.querySelectorAll('.quiz-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const quizUrl = e.currentTarget.dataset.quizUrl;
-                openQuizPopup(quizUrl);
+            activateNavButton('nav-kpi-risk');
+
+            monthSelect.addEventListener('change', (e) => {
+                currentMonthIndex = parseInt(e.target.value);
+                renderKpiCards(currentMonthIndex);
+            });
+
+            // Add event listeners for quiz buttons
+            document.querySelectorAll('.quiz-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const quizUrl = e.currentTarget.dataset.quizUrl;
+                    openQuizPopup(quizUrl);
+                });
             });
         });
 

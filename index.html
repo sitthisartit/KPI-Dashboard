@@ -65,9 +65,7 @@
         .section-hidden {
             display: none;
         }
-        .text-shadow-subtle {
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-        }
+        /* Removed text-shadow-subtle */
         .loading-overlay {
             position: fixed;
             inset: 0;
@@ -89,6 +87,14 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Adjusted styles for risk/opportunity cards to match image */
+        .ro-card {
+            max-width: 280px; /* Slightly smaller max-width */
+            min-height: 220px; /* Adjusted min-height */
+            padding: 1.25rem; /* Adjusted padding */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1); /* Deeper shadow */
+            border-radius: 1rem; /* More rounded corners */
+        }
     </style>
 </head>
 <body class="text-white">
@@ -97,10 +103,10 @@
         <div class="spinner"></div>
     </div>
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 lg:max-w-screen-xl">
         <header class="text-center mb-10">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-shadow-subtle">วัตถุประสงค์คุณภาพ (KPI)</h1>
-            <p class="text-xl text-white text-shadow-subtle mt-2">แผนกคลังสินค้า ประจำปี 2568</p>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white">วัตถุประสงค์คุณภาพ (KPI)</h1>
+            <p class="text-xl text-white mt-2">แผนกคลังสินค้า ประจำปี 2568</p>
             <div class="w-24 h-1 bg-teal-500 mx-auto mt-4 rounded"></div>
         </header>
 
@@ -120,21 +126,21 @@
             </button>
         </nav>
 
-        <section id="kpi-risk-section">
+        <section id="kpi-risk-section" class="space-y-12">
             <!-- Company Policy Section -->
-            <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 mb-12 text-center">
-                <h2 class="text-3xl sm:text-4xl font-bold text-black mb-4 text-shadow-subtle">นโยบายคุณภาพ</h2>
-                <p class="text-xl sm:text-2xl font-semibold text-gray-900 leading-relaxed text-shadow-subtle">
+            <div class="bg-white bg-opacity-75 rounded-xl shadow-2xl p-6 mb-12 text-center border-b-4 border-teal-500">
+                <h2 class="text-3xl sm:text-4xl font-bold text-black mb-4">นโยบายคุณภาพ</h2>
+                <p class="text-xl sm:text-2xl font-semibold text-gray-900 leading-relaxed">
                     “ผลิตสินค้าที่มีคุณภาพ ตรงตามความต้องการของลูกค้า ส่งมอบทันเวลา
                     พัฒนาปรับปรุงอย่างต่อเนื่องเพื่อความพึงพอใจของลูกค้า”
                 </p>
-                <p class="text-sm text-gray-700 mt-4 text-shadow-subtle">
+                <p class="text-sm text-gray-700 mt-4">
                     ประกาศ ณ วันที่ 1 มีนาคม พ.ศ.2567
                 </p>
             </div>
 
             <div class="mb-6 flex justify-center items-center">
-                <label for="month-select" class="mr-3 text-lg font-semibold text-white text-shadow-subtle">เลือกเดือน:</label>
+                <label for="month-select" class="mr-3 text-lg font-semibold text-white">เลือกเดือน:</label>
                 <select id="month-select" class="p-2 border border-blue-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-800">
                 </select>
             </div>
@@ -142,35 +148,63 @@
             <main id="kpi-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
             </main>
 
-            <section class="mt-16">
-                <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8 text-shadow-subtle">การประเมินความเสี่ยงและโอกาส</h2>
-                <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto text-shadow-subtle">
+            <section class="mt-16 bg-white bg-opacity-75 rounded-xl shadow-2xl p-8">
+                <h2 class="text-3xl sm:text-4xl font-bold text-black text-center mb-8">การประเมินความเสี่ยงและโอกาส</h2>
+                <p class="text-lg text-gray-900 text-center mb-10 max-w-3xl mx-auto">
                     ส่วนนี้แสดงการวิเคราะห์ความเสี่ยงและโอกาสที่สำคัญในแผนกคลังสินค้า โดยประเมินจากโอกาสที่จะเกิดขึ้นและผลกระทบ เพื่อให้เข้าใจถึงระดับความสำคัญและมาตรการที่จำเป็น
                 </p>
 
-                <div id="risk-opportunity-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Separate Risk and Opportunity Grids -->
+                <h3 class="text-2xl sm:text-3xl font-bold text-black text-center mb-6">รายการความเสี่ยง</h3>
+                <div class="max-w-6xl mx-auto"> <!-- Added container for centering -->
+                    <div id="risk-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 justify-items-center items-stretch">
+                        <!-- Risk cards will be rendered here -->
+                    </div>
+                </div>
+
+                <h3 class="text-2xl sm:text-3xl font-bold text-black text-center mb-6">รายการโอกาส</h3>
+                <div class="max-w-6xl mx-auto"> <!-- Added container for centering -->
+                    <div id="opportunity-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 justify-items-center items-stretch">
+                        <!-- Opportunity cards will be rendered here -->
+                    </div>
                 </div>
 
                 <!-- Separate Risk and Opportunity Charts -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                    <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6">
-                        <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">สรุประดับความเสี่ยง</h3>
+                    <div class="bg-white bg-opacity-90 rounded-xl shadow-lg p-6 border border-gray-200">
+                        <h3 class="text-2xl font-bold text-black mb-6 text-center">สรุประดับความเสี่ยง</h3>
                         <div class="chart-container-line">
                             <canvas id="riskSummaryChart"></canvas>
                         </div>
-                        <p class="text-center text-gray-900 mt-4 text-shadow-subtle">แผนภูมิแสดงการกระจายของระดับความเสี่ยง (วางเมาส์บนแท่งเพื่อดูรายละเอียด)</p>
+                        <p class="text-center text-gray-900 mt-4">
+                            แผนภูมิแสดงการกระจายของระดับความเสี่ยง (วางเมาส์บนแท่งเพื่อดูรายละเอียด)
+                            <br>
+                            <span class="text-sm">ระดับ 'ต่ำ' (คะแนน 1-5) ไม่ต้องดำเนินการใดๆ</span>
+                            <br>
+                            <span class="text-sm">ระดับ 'ปานกลาง' (คะแนน 6-10) เฝ้าระวัง และต้องนำมาทบทวนใหม่ในครั้งหน้า</span>
+                            <br>
+                            <span class="text-sm">ระดับ 'สูง' (คะแนน 11-15) จัดทำแผนงาน (Action Plan)</span>
+                        </p>
                     </div>
-                    <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6">
-                        <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">สรุประดับโอกาส</h3>
+                    <div class="bg-white bg-opacity-90 rounded-xl shadow-lg p-6 border border-gray-200">
+                        <h3 class="text-2xl font-bold text-black mb-6 text-center">สรุประดับโอกาส</h3>
                         <div class="chart-container-line">
                             <canvas id="opportunitySummaryChart"></canvas>
                         </div>
-                        <p class="text-center text-gray-900 mt-4 text-shadow-subtle">แผนภูมิแสดงการกระจายของระดับโอกาส (วางเมาส์บนแท่งเพื่อดูรายละเอียด)</p>
+                        <p class="text-center text-gray-900 mt-4">
+                            แผนภูมิแสดงการกระจายของระดับโอกาส (วางเมาส์บนแท่งเพื่อดูรายละเอียด)
+                            <br>
+                            <span class="text-sm">ระดับ 'ต่ำ' (คะแนน 1-5) ไม่ต้องดำเนินการใดๆ</span>
+                            <br>
+                            <span class="text-sm">ระดับ 'ปานกลาง' (คะแนน 6-10) เฝ้าระวัง และต้องนำมาทบทวนใหม่ในครั้งหน้า</span>
+                            <br>
+                            <span class="text-sm">ระดับ 'สูง' (คะแนน 11-15) จัดทำแผนงาน (Action Plan)</span>
+                        </p>
                     </div>
                 </div>
 
-                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6">
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">ตารางจัดลำดับความเสี่ยงและโอกาส</h3>
+                <div class="bg-white bg-opacity-90 rounded-xl shadow-lg p-6 border border-gray-200">
+                    <h3 class="text-2xl font-bold text-black mb-6">ตารางจัดลำดับความเสี่ยงและโอกาส</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white bg-opacity-75 border border-gray-200 rounded-lg">
                             <thead>
@@ -180,7 +214,7 @@
                                     <th class="py-3 px-6 text-left">การดำเนินงาน</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-gray-900 text-sm font-light text-shadow-subtle">
+                            <tbody class="text-gray-900 text-sm font-light">
                                 <tr class="border-b border-gray-200 hover:bg-gray-100">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">1-5</td>
                                     <td class="py-3 px-6 text-left">ต่ำ</td>
@@ -205,8 +239,8 @@
 
         <!-- Combined Trend Section (New) -->
         <section id="combined-trend-section" class="mt-16 section-hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8 text-shadow-subtle">แนวโน้มรวมของ KPI ทั้งหมด</h2>
-            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto text-shadow-subtle">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แนวโน้มรวมของ KPI ทั้งหมด</h2>
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto">
                 แผนภูมิแสดงแนวโน้มรายเดือนของ KPI แต่ละตัว เพื่อการวิเคราะห์ภาพรวมและแนวโน้มในระยะยาว
             </p>
             <div id="individual-trend-charts-container" class="space-y-8">
@@ -216,28 +250,28 @@
 
         <!-- Quiz Section -->
         <section id="quiz-section" class="mt-16 section-hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8 text-shadow-subtle">แบบทดสอบสำหรับตำแหน่งต่างๆ</h2>
-            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto text-shadow-subtle">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แบบทดสอบสำหรับตำแหน่งต่างๆ</h2>
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto">
                 เลือกแบบทดสอบตามตำแหน่งที่คุณต้องการฝึกฝนความรู้ความเข้าใจ
             </p>
 
             <div class="space-y-12">
                 <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">1. แบบทดสอบพนักงานเก็บสินค้าในไลน์ผลิต</h3>
+                    <h3 class="text-2xl font-bold text-black mb-6">1. แบบทดสอบพนักงานเก็บสินค้าในไลน์ผลิต</h3>
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/GjgDKJ7Pqi8vvpRE7">
                         ทำแบบทดสอบ
                     </button>
                 </div>
 
                 <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">2. แบบทดสอบพนักงานจัดเตรียมสินค้าส่งออก</h3>
+                    <h3 class="text-2xl font-bold text-black mb-6">2. แบบทดสอบพนักงานจัดเตรียมสินค้าส่งออก</h3>
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/MwdmKPsZYuHBajU17">
                         ทำแบบทดสอบ
                     </button>
                 </div>
 
                 <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">3. แบบทดสอบพนักงานเบิกจ่ายวัสดุประกอบ</h3>
+                    <h3 class="text-2xl font-bold text-black mb-6">3. แบบทดสอบพนักงานเบิกจ่ายวัสดุประกอบ</h3>
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/3f9x5tjSKQ2ZgZj8A">
                         ทำแบบทดสอบ
                     </button>
@@ -247,15 +281,16 @@
 
         <!-- Document Forms Section (New) -->
         <section id="document-forms-section" class="mt-16 section-hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8 text-shadow-subtle">แบบฟอร์มเอกสารในแผนก</h2>
-            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto text-shadow-subtle">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แบบฟอร์มเอกสารในแผนก</h2>
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto">
                 ส่วนนี้จะรวบรวมแบบฟอร์มเอกสารที่สำคัญสำหรับการปฏิบัติงานในแผนกคลังสินค้า
             </p>
 
             <div class="space-y-6">
+                <!-- Content for Document Forms Section - This content is static and will always be here. -->
                 <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-black mb-4 text-shadow-subtle">วัตถุประสงค์คุณภาพ (KPI) แผนกคลังสินค้า (saha p.v.c.1980)</h3>
-                    <p class="text-gray-900 mb-4 text-shadow-subtle">
+                    <h3 class="text-2xl font-bold text-black mb-4">วัตถุประสงค์คุณภาพ (KPI) แผนกคลังสินค้า (saha p.v.c.1980)</h3>
+                    <p class="text-gray-900 mb-4">
                         (เอกสารนี้เป็น Google Sheet)
                     </p>
                     <a href="https://docs.google.com/spreadsheets/d/1a6DdbnbNaNLjXZg4MncuK9mwOWlrwTQizzngf27TgLg/edit?usp=sharing" target="_blank" class="inline-block bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors shadow-md">
@@ -264,11 +299,11 @@
                 </div>
 
                 <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">เพิ่มแบบฟอร์มเอกสารอื่นๆ</h3>
-                    <p class="text-xl text-gray-900 mb-4 text-shadow-subtle">
+                    <h3 class="text-2xl font-bold text-black mb-6">เพิ่มแบบฟอร์มเอกสารอื่นๆ</h3>
+                    <p class="text-xl text-gray-900 mb-4">
                         หากคุณต้องการเพิ่มแบบฟอร์มเอกสารอื่นๆ กรุณาอัปโหลดไฟล์ไปยัง Google Drive และทำตามขั้นตอนการรับลิงก์สำหรับแชร์
                     </p>
-                    <p class="text-gray-900 mt-4 text-shadow-subtle">
+                    <p class="text-gray-900 mt-4">
                         จากนั้นแจ้งชื่อแบบฟอร์มและ **ลิงก์ Google Drive** มาให้ผมได้เลยครับ ผมจะช่วยเพิ่มลงในหน้านี้ให้
                     </p>
                 </div>
@@ -281,12 +316,12 @@
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0">
             <div class="modal-content overflow-y-auto p-6">
                 <div class="flex justify-between items-start mb-4">
-                    <h2 id="modal-title" class="text-2xl font-bold text-black text-shadow-subtle"></h2>
+                    <h2 id="modal-title" class="text-2xl font-bold text-black"></h2>
                     <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-                <div id="modal-body" class="space-y-4 text-gray-900 text-shadow-subtle">
+                <div id="modal-body" class="space-y-4 text-gray-900">
                 </div>
             </div>
         </div>
@@ -297,12 +332,12 @@
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0">
             <div class="modal-content overflow-y-auto p-6">
                 <div class="flex justify-between items-start mb-4">
-                    <h2 id="ro-modal-title" class="text-2xl font-bold text-black text-shadow-subtle"></h2>
+                    <h2 id="ro-modal-title" class="text-2xl font-bold text-black"></h2>
                     <button id="ro-modal-close-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-                <div id="ro-modal-body" class="space-y-4 text-gray-900 text-shadow-subtle">
+                <div id="ro-modal-body" class="space-y-4 text-gray-900">
                 </div>
             </div>
         </div>
@@ -329,7 +364,7 @@
                     ]
                 },
                 monthlyData: {
-                     '0': { currentValue: 100, target: 98 }, // ม.ค.
+                    '0': { currentValue: 100, target: 98 }, // ม.ค.
                     '1': { currentValue: 100, target: 98 }, // ก.พ.
                     '2': { currentValue: 100, target: 98 }, // มี.ค.
                     '3': { currentValue: 99.34, target: 98 }, // เม.ย.
@@ -562,7 +597,8 @@
         const monthSelect = document.getElementById('month-select');
         const loadingOverlay = document.getElementById('loading-overlay'); 
 
-        const riskOpportunityGrid = document.getElementById('risk-opportunity-grid');
+        const riskGrid = document.getElementById('risk-grid'); // New: Risk grid
+        const opportunityGrid = document.getElementById('opportunity-grid'); // New: Opportunity grid
         const roModal = document.getElementById('ro-modal');
         const roModalContent = roModal.querySelector('.bg-white');
         const roModalTitle = document.getElementById('ro-modal-title');
@@ -811,7 +847,7 @@
         };
 
         // New function for individual line charts
-        const createIndividualLineChart = (canvasId, labels, currentValues, targetValues, unit, kpiTitle, lowerIsBetter) => {
+        const createIndividualLineChart = (canvasId, labels, currentValues, targetValues, unit, kpiTitle, lowerIsBetter, kpiType) => {
             const ctx = document.getElementById(canvasId);
             if (!ctx) return;
 
@@ -821,6 +857,26 @@
 
             // Determine target line color based on lowerIsBetter for consistency
             const targetLineColor = lowerIsBetter ? '#ef4444' : '#14b8a6'; // Red for lowerIsBetter target, Green otherwise
+
+            // Set Y-axis min/max for percentage KPIs
+            let yAxisConfig = {
+                title: {
+                    display: true,
+                    text: `ค่า (${unit})`,
+                    font: { family: 'Sarabun', color: '#000000' }
+                },
+                ticks: {
+                    font: { size: 10, family: 'Sarabun', color: '#000000' }
+                }
+            };
+
+            if (kpiType === 'percentage') {
+                yAxisConfig.min = 90;
+                yAxisConfig.max = 100;
+            } else {
+                yAxisConfig.beginAtZero = true; // For count-based KPIs, start from zero
+            }
+
 
             individualTrendChartInstances[canvasId] = new Chart(ctx, {
                 type: 'line',
@@ -894,17 +950,7 @@
                                 font: { family: 'Sarabun', color: '#000000' }
                             }
                         },
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: `ค่า (${unit})`,
-                                font: { family: 'Sarabun', color: '#000000' }
-                            },
-                            ticks: {
-                                font: { family: 'Sarabun', color: '#000000' }
-                            }
-                        }
+                        y: yAxisConfig // Use the dynamically created Y-axis config
                     }
                 }
             });
@@ -1001,11 +1047,11 @@
                         changeColor = kpi.lowerIsBetter ? 'text-emerald-600' : 'text-rose-600';
                     }
 
-                    changeIndicatorHtml = `<span class="${changeColor} text-shadow-subtle">${Math.abs(percentageChange).toFixed(1)}% ${arrow}</span>`;
+                    changeIndicatorHtml = `<span class="${changeColor}">${Math.abs(percentageChange).toFixed(1)}% ${arrow}</span>`;
                 }
 
                 const card = document.createElement('div');
-                card.className = 'bg-white bg-opacity-75 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105';
+                card.className = 'bg-white bg-opacity-90 rounded-xl shadow-xl p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105 border border-gray-200';
                 
                 let vizHtml = '';
                 if (kpi.type === 'percentage') {
@@ -1013,17 +1059,17 @@
                         vizHtml = `<div class="chart-container"><canvas id="${kpi.id}"></canvas></div>`;
                     } else {
                         vizHtml = `<div class="h-[150px] flex flex-col justify-center items-center">
-                                         <p class="kpi-value-lg font-bold text-gray-400 text-shadow-subtle">N/A</p>
-                                         <p class="text-gray-900 text-lg text-shadow-subtle">${kpi.unit}</p>
-                                         <p class="text-gray-900 text-shadow-subtle">เป้าหมาย: N/A ${kpi.unit}</p>
+                                         <p class="kpi-value-lg font-bold text-gray-400">N/A</p>
+                                         <p class="text-gray-900 text-lg">${kpi.unit}</p>
+                                         <p class="text-gray-900">เป้าหมาย: N/A ${kpi.unit}</p>
                                        </div>`;
                     }
                 } else {
                     const colorClass = (currentValue !== 'N/A' && targetValue !== 'N/A') ? getPerformanceColor(currentValue, targetValue, kpi.lowerIsBetter) : 'text-gray-400';
                     vizHtml = `<div class="h-[150px] flex flex-col justify-center items-center">
-                                 <p class="kpi-value-lg font-bold text-shadow-subtle" style="color: ${colorClass};">${currentValue}</p>
-                                 <p class="text-gray-900 text-lg text-shadow-subtle">${kpi.unit}</p>
-                                 <p class="text-gray-900 text-shadow-subtle">เป้าหมาย: ${kpi.lowerIsBetter ? '≤ ' : ''}${targetValue} ${kpi.unit}</p>
+                                 <p class="kpi-value-lg font-bold" style="color: ${colorClass};">${currentValue}</p>
+                                 <p class="text-gray-900 text-lg">${kpi.unit}</p>
+                                 <p class="text-gray-900">เป้าหมาย: ${kpi.lowerIsBetter ? '≤ ' : ''}${targetValue} ${kpi.unit}</p>
                                </div>`;
                 }
 
@@ -1037,19 +1083,19 @@
 
 
                 card.innerHTML = `
-                    <h2 class="text-xl font-bold mb-2 text-black text-shadow-subtle">${kpi.title}</h2>
+                    <h2 class="text-xl font-bold mb-2 text-black">${kpi.title}</h2>
                     <div class="flex flex-col items-center justify-center mb-4">
                         <div class="flex items-center justify-center mb-1">
-                            <p class="text-base text-gray-900 text-shadow-subtle">เดือนปัจจุบัน:</p>
-                            <span class="text-gray-900 text-shadow-subtle ml-2">${currentValue} ${kpi.unit}</span>
+                            <p class="text-base text-gray-900">เดือนปัจจุบัน:</p>
+                            <span class="text-gray-900 ml-2">${currentValue} ${kpi.unit}</span>
                         </div>
-                        ${changeIndicatorHtml ? `<p class="text-base text-gray-900 text-shadow-subtle">เดือนก่อนหน้า: ${changeIndicatorHtml}</p>` : `<p class="text-base text-gray-900 text-shadow-subtle">เดือนก่อนหน้า: ไม่มีข้อมูล</p>`}
+                        ${changeIndicatorHtml ? `<p class="text-base text-gray-900">เดือนก่อนหน้า: ${changeIndicatorHtml}</p>` : `<p class="text-base text-gray-900">เดือนก่อนหน้า: ไม่มีข้อมูล</p>`}
                     </div>
                     ${vizHtml}
                     <div class="sparkline-container">
                         <canvas id="${kpi.id}-sparkline"></canvas>
                     </div>
-                    <p class="mt-4 text-gray-900 text-shadow-subtle">${getStatusText(currentValue, targetValue, kpi.lowerIsBetter)}</p>
+                    <p class="mt-4 text-gray-900">${getStatusText(currentValue, targetValue, kpi.lowerIsBetter)}</p>
                     <div class="flex space-x-2 mt-6">
                         <button data-id="${kpi.id}" class="details-btn bg-blue-200 text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-blue-300 transition-colors">
                             ดูรายละเอียด
@@ -1085,36 +1131,36 @@
                     modalBody.innerHTML = `
                         <div class="space-y-3">
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ดัชนีชี้วัด:</p>
-                                <p class="text-shadow-subtle">${kpi.details.indicator}</p>
+                                <p class="font-semibold text-gray-900">ดัชนีชี้วัด:</p>
+                                <p>${kpi.details.indicator}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">เป้าหมาย:</p>
-                                <p class="text-lg font-bold ${kpi.lowerIsBetter ? 'text-blue-600' : 'text-emerald-600'} text-shadow-subtle">
+                                <p class="font-semibold text-gray-900">เป้าหมาย:</p>
+                                <p class="text-lg font-bold ${kpi.lowerIsBetter ? 'text-blue-600' : 'text-emerald-600'}">
                                     ${kpi.lowerIsBetter ? 'ไม่เกิน ' : ''}${monthlyKpi ? monthlyKpi.target : 'N/A'} ${kpi.unit}
                                 </p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ความถี่ในการประเมิน:</p>
-                                <p class="text-shadow-subtle">${kpi.details.frequency}</p>
+                                <p class="font-semibold text-gray-900">ความถี่ในการประเมิน:</p>
+                                <p>${kpi.details.frequency}</p>
                             </div>
                              <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">วิธีการประเมิน:</p>
-                                <p class="text-sm text-shadow-subtle">${kpi.details.evaluation}</p>
+                                <p class="font-semibold text-gray-900">วิธีการประเมิน:</p>
+                                <p class="text-sm">${kpi.details.evaluation}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">เกณฑ์การให้คะแนน:</p>
+                                <p class="font-semibold text-gray-900">เกณฑ์การให้คะแนน:</p>
                                 <ul class="list-none space-y-1 mt-1">
                                     ${kpi.details.levels.map(l => `
                                         <li class="flex items-center justify-between p-2 rounded-md bg-gray-50">
-                                            <span class="font-semibold ${l.color} text-shadow-subtle">ระดับ ${l.score}</span>
-                                            <span class="text-shadow-subtle">${l.value}</span>
+                                            <span class="font-semibold ${l.color}">ระดับ ${l.score}</span>
+                                            <span>${l.value}</span>
                                         </li>
                                     `).join('')}
                                 </ul>
                             </div>
                             <div class="mt-6">
-                                <h3 class="text-xl font-semibold mb-3 text-black text-shadow-subtle">แนวโน้มรายเดือน</h3>
+                                <h3 class="text-xl font-semibold mb-3 text-black">แนวโน้มรายเดือน</h3>
                                 <div class="chart-container-line">
                                     <canvas id="kpiLineChart"></canvas>
                                 </div>
@@ -1155,23 +1201,35 @@
         });
 
         const renderRiskOpportunityCards = () => {
-            riskOpportunityGrid.innerHTML = '';
+            riskGrid.innerHTML = ''; // Clear existing risk cards
+            opportunityGrid.innerHTML = ''; // Clear existing opportunity cards
+
             riskOpportunityData.forEach(item => {
                 const card = document.createElement('div');
                 const typeColor = item.type === 'Risk' ? 'bg-rose-100' : 'bg-emerald-100';
                 const textColor = item.type === 'Risk' ? 'text-rose-700' : 'text-emerald-700';
                 const levelColor = item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600');
 
-                card.className = `bg-white bg-opacity-75 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105 ${typeColor}`;
+                card.className = `bg-white bg-opacity-90 rounded-xl shadow-xl p-6 flex flex-col justify-between items-center text-center transition-transform duration-300 hover:scale-105 ${typeColor} ro-card border border-gray-200`; // Added ro-card class
                 card.innerHTML = `
-                    <div class="text-lg font-bold mb-2 ${textColor} text-shadow-subtle">${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}</div>
-                    <h3 class="text-xl font-bold mb-3 text-black text-shadow-subtle">${item.issue}</h3>
-                    <p class="text-2xl font-bold ${levelColor} mb-4 text-shadow-subtle">ระดับ: ${item.level}</p>
+                    <div class="text-lg font-bold mb-2 ${textColor}">${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}</div>
+                    <h3 class="text-xl font-bold mb-3 text-black">${item.issue}</h3>
+                    <div class="flex flex-col items-center mb-4 text-gray-900">
+                        <p class="text-sm">ระดับคะแนน: <span class="font-semibold">${item.likelihood_score * item.impact_score}</span></p>
+                        <p class="text-sm">โอกาส: <span class="font-semibold">${item.likelihood_score}</span></p>
+                        <p class="text-sm">ผลกระทบ: <span class="font-semibold">${item.impact_score}</span></p>
+                        <p class="text-2xl font-bold ${levelColor} mt-2">ระดับ: ${item.level}</p>
+                    </div>
                     <button data-id="${item.id}" class="ro-details-btn mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
                         ดูรายละเอียด
                     </button>
                 `;
-                riskOpportunityGrid.appendChild(card);
+                
+                if (item.type === 'Risk') {
+                    riskGrid.appendChild(card);
+                } else {
+                    opportunityGrid.appendChild(card);
+                }
             });
 
             document.querySelectorAll('.ro-details-btn').forEach(button => {
@@ -1181,30 +1239,36 @@
 
                     roModalTitle.textContent = `${item.type === 'Risk' ? 'รายละเอียดความเสี่ยง' : 'รายละเอียดโอกาส'}: ${item.issue}`;
                     roModalBody.innerHTML = `
-                        <div class="space-y-3">
+                        <div class="space-y-4">
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ประเด็น:</p>
-                                <p class="text-shadow-subtle">${item.issue}</p>
+                                <p class="font-semibold text-gray-900">ประเด็น:</p>
+                                <p>${item.issue}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">สาเหตุ:</p>
-                                <p class="text-shadow-subtle">${item.cause}</p>
+                                <p class="font-semibold text-gray-900">สาเหตุ:</p>
+                                <p>${item.cause}</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="font-semibold text-gray-900">โอกาสที่จะเกิดขึ้น (ระดับ ${item.likelihood_score}):</p>
+                                    <p>${item.likelihood_desc}</p>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-900">ผลกระทบ (ระดับ ${item.impact_score}):</p>
+                                    <p>${item.impact_desc}</p>
+                                </div>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">โอกาสที่จะเกิดขึ้น (ระดับ ${item.likelihood_score}):</p>
-                                <p class="text-shadow-subtle">${item.likelihood_desc}</p>
+                                <p class="font-semibold text-gray-900">ระดับคะแนนรวม:</p>
+                                <p class="text-xl font-bold text-blue-700">${item.likelihood_score * item.impact_score}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ผลกระทบ (ระดับ ${item.impact_score}):</p>
-                                <p class="text-shadow-subtle">${item.impact_desc}</p>
+                                <p class="font-semibold text-gray-900">ระดับ ${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}:</p>
+                                <p class="text-xl font-bold ${item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600')}">${item.level}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ระดับ ${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}:</p>
-                                <p class="text-xl font-bold ${item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600')} text-shadow-subtle">${item.level}</p>
-                            </div>
-                            <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">มาตรการ:</p>
-                                <p class="text-shadow-subtle">${item.mitigation}</p>
+                                <p class="font-semibold text-gray-900">มาตรการ:</p>
+                                <p>${item.mitigation}</p>
                             </div>
                         </div>
                     `;
@@ -1483,7 +1547,7 @@
                 const chartWrapper = document.createElement('div');
                 chartWrapper.className = 'bg-white bg-opacity-75 rounded-xl shadow-lg p-6';
                 chartWrapper.innerHTML = `
-                    <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">${kpi.title} แนวโน้ม</h3>
+                    <h3 class="text-2xl font-bold text-black mb-6 text-center">${kpi.title} แนวโน้ม</h3>
                     <div class="chart-container-line h-[400px]">
                         <canvas id="trendChart-${kpi.id}"></canvas>
                     </div>
@@ -1499,7 +1563,8 @@
                         chartTargetValues,
                         kpi.unit,
                         kpi.title,
-                        kpi.lowerIsBetter // Pass lowerIsBetter to determine target line color
+                        kpi.lowerIsBetter, // Pass lowerIsBetter to determine target line color
+                        kpi.type // Pass kpi.type to determine Y-axis scale
                     );
                 }, 0);
             });
@@ -1551,7 +1616,7 @@
             kpiRiskSection.classList.add('section-hidden');
             combinedTrendSection.classList.add('section-hidden');
             quizSection.classList.add('section-hidden');
-            documentFormsSection.classList.remove('section-hidden');
+            documentFormsSection.classList.remove('section-hidden'); // Make sure this section is visible
             activateNavButton('nav-document-forms');
         });
 

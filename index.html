@@ -6,39 +6,53 @@
     <title>Infographic: KPI แผนกคลังสินค้า</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- เพิ่ม Chart.js Datalabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 
+    <!-- Chosen Palette: Warm Neutrals (Background image, White/translucent cards, Blue/Teal/Rose accents) -->
+    <!-- Application Structure Plan: The application is structured as a Single Page Application (SPA) with distinct sections for "KPI & ความเสี่ยง", "แนวโน้มรวม", "ข้อสอบ", and "แบบฟอร์มเอกสาร". Navigation is handled via buttons in a central `nav` element, dynamically showing/hiding sections. The "KPI & ความเสี่ยง" section features interactive KPI cards with sparklines and detailed modals, allowing users to explore monthly performance and methodological details. The "แนวโน้มรวม" section provides a comprehensive view of all KPI trends, with "ข้อผิดพลาดในกระบวนการทำงาน" separated for focused analysis. The "ข้อสอบ" and "แบบฟอร์มเอกสาร" sections offer access to external resources like Google Forms and Google Sheets. This structure was chosen to provide a clear, thematic separation of content, making it easy for users to navigate between different aspects of warehouse management information (performance, risks, training, documentation) without reloading the page. The interactive elements like month selection, detail modals, and separate trend charts enhance user understanding and exploration by allowing drill-downs and focused analysis. -->
+    <!-- Visualization & Content Choices:
+        - KPI Cards (KPI & ความเสี่ยง section): Goal: Inform, Compare. Viz: Gauge Chart (Chart.js Doughnut) for percentage KPIs, large color-coded number for count KPIs. Sparkline (Chart.js Line) for monthly trends on each card. Interaction: Month selection dropdown to change displayed data, "ดูรายละเอียด" button to open a modal with full KPI methodology and a detailed line chart of monthly trends. Justification: Gauge charts provide an immediate visual of performance against target for percentages. Large numbers are impactful for counts. Sparklines offer a quick trend overview without clutter. Detail modals provide comprehensive context on demand.
+        - Risk/Opportunity Cards (KPI & ความเสี่ยง section): Goal: Inform, Organize. Viz: Color-coded cards based on type (Risk/Opportunity) and level (สูง/ปานกลาง/ต่ำ). Interaction: "ดูรายละเอียด" button to open a modal with full details (issue, cause, likelihood, impact, mitigation). Justification: Cards are effective for categorizing and summarizing discrete items. Modals allow for in-depth exploration without leaving the main view.
+        - Risk/Opportunity Summary Chart (KPI & ความเสี่ยง section): Goal: Summarize, Compare. Viz: Bar Chart (Chart.js Bar). Interaction: Hover tooltip to show specific issues within each level. Justification: Provides an aggregate view of risk/opportunity distribution by level, helping to identify areas of concern or potential.
+        - Combined Trend Chart (แนวโน้มรวม section): Goal: Compare, Change. Viz: Line Chart (Chart.js Line). Interaction: Tooltips for data points. Justification: Shows the overall trend of multiple KPIs over time, allowing for macro-level performance analysis.
+        - Process Errors Trend Chart (แนวโน้มรวม section): Goal: Inform, Change. Viz: Separate Line Chart (Chart.js Line). Interaction: Tooltips for data points. Justification: Isolating this critical KPI allows for dedicated focus on its trend, which is often a key area for improvement.
+        - Quiz Buttons (ข้อสอบ section): Goal: Engage, Test. Viz: Styled buttons. Interaction: Click to open external Google Forms in a new tab. Justification: Provides direct access to training/assessment resources.
+        - Document Links (แบบฟอร์มเอกสาร section): Goal: Inform, Access. Viz: Styled links. Interaction: Click to open external Google Sheets/Drive links in a new tab. Justification: Centralizes access to important operational documents.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
-            background-image: url('https://www.sahapvc1980.com/images/banner/pharma_phamapack0436_1.webp'); /* Placeholder background image */
-            background-size: cover; /* Cover the entire area */
-            background-repeat: no-repeat; /* Do not repeat the image */
-            background-attachment: fixed; /* Keep background fixed when scrolling */
-            background-position: center center; /* Center the background image */
+            background-image: url('https://www.sahapvc1980.com/images/banner/pharma_phamapack0436_1.webp'); /* รูปภาพพื้นหลัง */
+            background-size: cover; /* คลุมพื้นที่ทั้งหมด */
+            background-repeat: no-repeat; /* ไม่ซ้ำรูปภาพ */
+            background-attachment: fixed; /* พื้นหลังคงที่เมื่อเลื่อนหน้าจอ */
+            background-position: center center; /* จัดตำแหน่งรูปภาพพื้นหลังตรงกลาง */
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 250px;
-            height: 150px;
-            max-height: 200px;
+            max-width: 300px; /* Adjusted max-width */
+            height: 20vh; /* Responsive height */
+            max-height: 200px; /* Max height for larger screens */
             margin: 0 auto;
         }
-        /* New style for sparkline charts */
         .sparkline-container {
             position: relative;
             width: 100%;
-            height: 80px; /* Increased height for more detail */
+            height: 10vh; /* Responsive height */
+            max-height: 100px; /* Max height */
             margin-top: 10px;
         }
         .chart-container-line {
             position: relative;
             width: 100%;
-            height: 250px;
-            max-height: 300px;
+            height: 35vh; /* Responsive height */
+            max-height: 400px; /* Max height for larger screens */
             margin: 0 auto;
         }
         .modal-content {
@@ -51,26 +65,43 @@
         .section-hidden {
             display: none;
         }
-        /* Added subtle text shadow for better readability on translucent backgrounds */
         .text-shadow-subtle {
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #3b82f6;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
-<body class="text-white"> <!-- Main text color set to white for contrast on background image -->
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-sky-50 bg-opacity-75 flex items-center justify-center z-[100]">
-        <div class="flex flex-col items-center">
-            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-            <p class="mt-4 text-gray-700 text-lg">กำลังโหลด...</p>
-        </div>
+<body class="text-white">
+    <!-- Loading Overlay (kept for potential future use or initial loading, but currently not actively used as Firebase is removed) -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
     </div>
 
     <div class="container mx-auto p-4 sm:p-6 md:p-8">
         <header class="text-center mb-10">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white">วัตถุประสงค์คุณภาพ (KPI)</h1> <!-- Header text white -->
-            <p class="text-xl text-white mt-2">แผนกคลังสินค้า ประจำปี 2568</p> <!-- Header text white -->
-            <div class="w-24 h-1 bg-teal-500 mx-auto mt-4 rounded"></div> <!-- Brighter header line -->
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-shadow-subtle">วัตถุประสงค์คุณภาพ (KPI)</h1>
+            <p class="text-xl text-white text-shadow-subtle mt-2">แผนกคลังสินค้า ประจำปี 2568</p>
+            <div class="w-24 h-1 bg-teal-500 mx-auto mt-4 rounded"></div>
         </header>
 
         <!-- Navigation Menu -->
@@ -90,9 +121,21 @@
         </nav>
 
         <section id="kpi-risk-section">
+            <!-- Company Policy Section -->
+            <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 mb-12 text-center">
+                <h2 class="text-3xl sm:text-4xl font-bold text-black mb-4 text-shadow-subtle">นโยบายคุณภาพ</h2>
+                <p class="text-xl sm:text-2xl font-semibold text-gray-900 leading-relaxed text-shadow-subtle">
+                    “ผลิตสินค้าที่มีคุณภาพ ตรงตามความต้องการของลูกค้า ส่งมอบทันเวลา
+                    พัฒนาปรับปรุงอย่างต่อเนื่องเพื่อความพึงพอใจของลูกค้า”
+                </p>
+                <p class="text-sm text-gray-700 mt-4 text-shadow-subtle">
+                    ประกาศ ณ วันที่ 1 มีนาคม พ.ศ.2567
+                </p>
+            </div>
+
             <div class="mb-6 flex justify-center items-center">
-                <label for="month-select" class="mr-3 text-lg font-semibold text-white">เลือกเดือน:</label> <!-- Label text white -->
-                <select id="month-select" class="p-2 border border-blue-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-800"> <!-- Select options text remains gray-800 for readability -->
+                <label for="month-select" class="mr-3 text-lg font-semibold text-white text-shadow-subtle">เลือกเดือน:</label>
+                <select id="month-select" class="p-2 border border-blue-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-800">
                 </select>
             </div>
 
@@ -100,26 +143,36 @@
             </main>
 
             <section class="mt-16">
-                <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">การประเมินความเสี่ยงและโอกาส</h2> <!-- Section title text white -->
-                <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto"> <!-- Section description text white -->
+                <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8 text-shadow-subtle">การประเมินความเสี่ยงและโอกาส</h2>
+                <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto text-shadow-subtle">
                     ส่วนนี้แสดงการวิเคราะห์ความเสี่ยงและโอกาสที่สำคัญในแผนกคลังสินค้า โดยประเมินจากโอกาสที่จะเกิดขึ้นและผลกระทบ เพื่อให้เข้าใจถึงระดับความสำคัญและมาตรการที่จำเป็น
                 </p>
 
                 <div id="risk-opportunity-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                 </div>
 
-                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 mb-12"> <!-- Changed to bg-opacity-75 -->
-                    <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">สรุประดับความเสี่ยงและโอกาส</h3> <!-- Changed to text-black and added text-shadow-subtle -->
-                    <div class="chart-container-line">
-                        <canvas id="riskOpportunitySummaryChart"></canvas>
+                <!-- Separate Risk and Opportunity Charts -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">สรุประดับความเสี่ยง</h3>
+                        <div class="chart-container-line">
+                            <canvas id="riskSummaryChart"></canvas>
+                        </div>
+                        <p class="text-center text-gray-900 mt-4 text-shadow-subtle">แผนภูมิแสดงการกระจายของระดับความเสี่ยง (วางเมาส์บนแท่งเพื่อดูรายละเอียด)</p>
                     </div>
-                    <p class="text-center text-gray-900 mt-4 text-shadow-subtle">แผนภูมิแสดงการกระจายของระดับความเสี่ยงและโอกาสที่ประเมินได้ (วางเมาส์บนแท่งเพื่อดูรายละเอียด)</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                    <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">สรุประดับโอกาส</h3>
+                        <div class="chart-container-line">
+                            <canvas id="opportunitySummaryChart"></canvas>
+                        </div>
+                        <p class="text-center text-gray-900 mt-4 text-shadow-subtle">แผนภูมิแสดงการกระจายของระดับโอกาส (วางเมาส์บนแท่งเพื่อดูรายละเอียด)</p>
+                    </div>
                 </div>
 
-                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6"> <!-- Changed to bg-opacity-75 -->
-                    <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">ตารางจัดลำดับความเสี่ยงและโอกาส</h3> <!-- Changed to text-black and added text-shadow-subtle -->
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6">
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">ตารางจัดลำดับความเสี่ยงและโอกาส</h3>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white bg-opacity-75 border border-gray-200 rounded-lg"> <!-- Changed to bg-opacity-75 -->
+                        <table class="min-w-full bg-white bg-opacity-75 border border-gray-200 rounded-lg">
                             <thead>
                                 <tr class="bg-blue-100 text-blue-800 uppercase text-sm leading-normal">
                                     <th class="py-3 px-6 text-left">ระดับคะแนน</th>
@@ -127,7 +180,7 @@
                                     <th class="py-3 px-6 text-left">การดำเนินงาน</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-gray-900 text-sm font-light text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                            <tbody class="text-gray-900 text-sm font-light text-shadow-subtle">
                                 <tr class="border-b border-gray-200 hover:bg-gray-100">
                                     <td class="py-3 px-6 text-left whitespace-nowrap">1-5</td>
                                     <td class="py-3 px-6 text-left">ต่ำ</td>
@@ -152,49 +205,39 @@
 
         <!-- Combined Trend Section (New) -->
         <section id="combined-trend-section" class="mt-16 section-hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แนวโน้มรวมของ KPI ทั้งหมด</h2>
-            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto">
-                แผนภูมิแสดงแนวโน้มรายเดือนของ KPI ทั้งหมด เพื่อการวิเคราะห์ภาพรวมและแนวโน้มในระยะยาว
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8 text-shadow-subtle">แนวโน้มรวมของ KPI ทั้งหมด</h2>
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto text-shadow-subtle">
+                แผนภูมิแสดงแนวโน้มรายเดือนของ KPI แต่ละตัว เพื่อการวิเคราะห์ภาพรวมและแนวโน้มในระยะยาว
             </p>
-            <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 mb-8"> <!-- Added mb-8 for spacing -->
-                <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">แนวโน้ม KPI อื่นๆ</h3>
-                <div class="chart-container-line h-[400px]">
-                    <canvas id="combinedTrendChart"></canvas>
-                </div>
-            </div>
-
-            <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6">
-                <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">แนวโน้มข้อผิดพลาดในกระบวนการทำงาน</h3>
-                <div class="chart-container-line h-[400px]">
-                    <canvas id="processErrorsTrendChart"></canvas>
-                </div>
+            <div id="individual-trend-charts-container" class="space-y-8">
+                <!-- Individual KPI trend charts will be dynamically added here -->
             </div>
         </section>
 
         <!-- Quiz Section -->
         <section id="quiz-section" class="mt-16 section-hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แบบทดสอบสำหรับตำแหน่งต่างๆ</h2> <!-- Section title text white -->
-            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto"> <!-- Section description text white -->
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8 text-shadow-subtle">แบบทดสอบสำหรับตำแหน่งต่างๆ</h2>
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto text-shadow-subtle">
                 เลือกแบบทดสอบตามตำแหน่งที่คุณต้องการฝึกฝนความรู้ความเข้าใจ
             </p>
 
             <div class="space-y-12">
-                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">1. แบบทดสอบพนักงานเก็บสินค้าในไลน์ผลิต</h3> <!-- Changed to text-black and added text-shadow-subtle -->
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">1. แบบทดสอบพนักงานเก็บสินค้าในไลน์ผลิต</h3>
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/GjgDKJ7Pqi8vvpRE7">
                         ทำแบบทดสอบ
                     </button>
                 </div>
 
-                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">2. แบบทดสอบพนักงานจัดเตรียมสินค้าส่งออก</h3> <!-- Changed to text-black and added text-shadow-subtle -->
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">2. แบบทดสอบพนักงานจัดเตรียมสินค้าส่งออก</h3>
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/MwdmKPsZYuHBajU17">
                         ทำแบบทดสอบ
                     </button>
                 </div>
 
-                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">3. แบบทดสอบพนักงานเบิกจ่ายวัสดุประกอบ</h3> <!-- Changed to text-black and added text-shadow-subtle -->
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">3. แบบทดสอบพนักงานเบิกจ่ายวัสดุประกอบ</h3>
                     <button class="quiz-button bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors shadow-md" data-quiz-url="https://forms.gle/3f9x5tjSKQ2ZgZj8A">
                         ทำแบบทดสอบ
                     </button>
@@ -204,15 +247,15 @@
 
         <!-- Document Forms Section (New) -->
         <section id="document-forms-section" class="mt-16 section-hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8">แบบฟอร์มเอกสารในแผนก</h2> <!-- Section title text white -->
-            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto"> <!-- Section description text white -->
+            <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-8 text-shadow-subtle">แบบฟอร์มเอกสารในแผนก</h2>
+            <p class="text-lg text-white text-center mb-10 max-w-3xl mx-auto text-shadow-subtle">
                 ส่วนนี้จะรวบรวมแบบฟอร์มเอกสารที่สำคัญสำหรับการปฏิบัติงานในแผนกคลังสินค้า
             </p>
 
             <div class="space-y-6">
-                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
-                    <h3 class="text-2xl font-bold text-black mb-4 text-shadow-subtle">วัตถุประสงค์คุณภาพ (KPI) แผนกคลังสินค้า (saha p.v.c.1980)</h3> <!-- Changed to text-black and added text-shadow-subtle -->
-                    <p class="text-gray-900 mb-4 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-black mb-4 text-shadow-subtle">วัตถุประสงค์คุณภาพ (KPI) แผนกคลังสินค้า (saha p.v.c.1980)</h3>
+                    <p class="text-gray-900 mb-4 text-shadow-subtle">
                         (เอกสารนี้เป็น Google Sheet)
                     </p>
                     <a href="https://docs.google.com/spreadsheets/d/1a6DdbnbNaNLjXZg4MncuK9mwOWlrwTQizzngf27TgLg/edit?usp=sharing" target="_blank" class="inline-block bg-blue-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors shadow-md">
@@ -220,12 +263,12 @@
                     </a>
                 </div>
 
-                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center"> <!-- Changed to bg-opacity-75 -->
-                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">เพิ่มแบบฟอร์มเอกสารอื่นๆ</h3> <!-- Changed to text-black and added text-shadow-subtle -->
-                    <p class="text-xl text-gray-900 mb-4 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                <div class="bg-white bg-opacity-75 rounded-xl shadow-lg p-6 text-center">
+                    <h3 class="text-2xl font-bold text-black mb-6 text-shadow-subtle">เพิ่มแบบฟอร์มเอกสารอื่นๆ</h3>
+                    <p class="text-xl text-gray-900 mb-4 text-shadow-subtle">
                         หากคุณต้องการเพิ่มแบบฟอร์มเอกสารอื่นๆ กรุณาอัปโหลดไฟล์ไปยัง Google Drive และทำตามขั้นตอนการรับลิงก์สำหรับแชร์
                     </p>
-                    <p class="text-gray-900 mt-4 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                    <p class="text-gray-900 mt-4 text-shadow-subtle">
                         จากนั้นแจ้งชื่อแบบฟอร์มและ **ลิงก์ Google Drive** มาให้ผมได้เลยครับ ผมจะช่วยเพิ่มลงในหน้านี้ให้
                     </p>
                 </div>
@@ -233,52 +276,41 @@
         </section>
     </div>
 
+    <!-- Details Modal -->
     <div id="kpi-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0">
             <div class="modal-content overflow-y-auto p-6">
                 <div class="flex justify-between items-start mb-4">
-                    <h2 id="modal-title" class="text-2xl font-bold text-black text-shadow-subtle"></h2> <!-- Changed to text-black and added text-shadow-subtle -->
+                    <h2 id="modal-title" class="text-2xl font-bold text-black text-shadow-subtle"></h2>
                     <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-                <div id="modal-body" class="space-y-4 text-gray-900 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                <div id="modal-body" class="space-y-4 text-gray-900 text-shadow-subtle">
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Risk/Opportunity Details Modal -->
     <div id="ro-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0">
             <div class="modal-content overflow-y-auto p-6">
                 <div class="flex justify-between items-start mb-4">
-                    <h2 id="ro-modal-title" class="text-2xl font-bold text-black text-shadow-subtle"></h2> <!-- Changed to text-black and added text-shadow-subtle -->
+                    <h2 id="ro-modal-title" class="text-2xl font-bold text-black text-shadow-subtle"></h2>
                     <button id="ro-modal-close-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
-                <div id="ro-modal-body" class="space-y-4 text-gray-900 text-shadow-subtle"> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                <div id="ro-modal-body" class="space-y-4 text-gray-900 text-shadow-subtle">
                 </div>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        // นำเข้าโมดูล Firebase ที่จำเป็น
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        let db;
-        let auth;
-        let userId = 'anonymous'; // กำหนดค่าเริ่มต้นเป็น anonymous
-        let kpiDataFromFirestore = []; // เก็บข้อมูล KPI ที่ดึงมาจาก Firestore
-        let currentMonthIndex = 0; // ติดตามเดือนที่เลือกปัจจุบัน
-
-        const monthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-
-        // โครงสร้าง KPI เริ่มต้นสำหรับกรณีที่ Firestore ยังไม่มีข้อมูล
-        const defaultKpiStructure = [
+    <script>
+        // ข้อมูล KPI ของแต่ละเดือน คุณสามารถแก้ไขข้อมูลในส่วนนี้ได้โดยตรง
+        const kpiData = [
             {
                 id: 'stockAccuracy',
                 title: 'ความถูกต้องของสต็อกสินค้า',
@@ -293,11 +325,11 @@
                         { score: 4, value: '>98%', color: 'text-green-500' },
                         { score: 3, value: '98%', color: 'text-blue-500' },
                         { score: 2, value: '<98%', color: 'text-amber-500' },
-                        { score: 1, value: '<96%', color: 'text-rose-500' } /* Changed to rose-500 */
+                        { score: 1, value: '<96%', color: 'text-rose-500' }
                     ]
                 },
                 monthlyData: {
-                    '0': { currentValue: 100, target: 98 }, // ม.ค.
+                     '0': { currentValue: 100, target: 98 }, // ม.ค.
                     '1': { currentValue: 100, target: 98 }, // ก.พ.
                     '2': { currentValue: 100, target: 98 }, // มี.ค.
                     '3': { currentValue: 99.34, target: 98 }, // เม.ย.
@@ -319,7 +351,7 @@
                         { score: 4, value: '>98%', color: 'text-green-500' },
                         { score: 3, value: '98%', color: 'text-blue-500' },
                         { score: 2, value: '<98%', color: 'text-amber-500' },
-                        { score: 1, value: '<96%', color: 'text-rose-500' } /* Changed to rose-500 */
+                        { score: 1, value: '<96%', color: 'text-rose-500' }
                     ]
                 },
                 monthlyData: {
@@ -346,7 +378,7 @@
                         { score: 4, value: '3 ครั้ง', color: 'text-green-500' },
                         { score: 3, value: '4 ครั้ง', color: 'text-blue-500' },
                         { score: 2, value: '5 ครั้ง', color: 'text-amber-500' },
-                        { score: 1, value: '>5 ครั้ง', color: 'text-rose-500' } /* Changed to rose-500 */
+                        { score: 1, value: '>5 ครั้ง', color: 'text-rose-500' }
                     ]
                 },
                 monthlyData: {
@@ -372,7 +404,7 @@
                         { score: 4, value: '>95%', color: 'text-green-500' },
                         { score: 3, value: '95%', color: 'text-blue-500' },
                         { score: 2, value: '<95%', color: 'text-amber-500' },
-                        { score: 1, value: '<90%', color: 'text-rose-500' } /* Changed to rose-500 */
+                        { score: 1, value: '<90%', color: 'text-rose-500' }
                     ]
                 },
                  monthlyData: {
@@ -477,6 +509,7 @@
             1: 'น้อย: คงทำให้ระบบฯ ได้รับการรับรองต่อเนื่อง / พนักงานมีความสุขในปฏิบัติงานน้อย'
         };
 
+        // คำนวณระดับความเสี่ยง/โอกาส
         function calculateLevel(type, likelihood, impact) {
             const score = likelihood * impact;
             if (type === 'Risk') {
@@ -491,6 +524,7 @@
             return 'N/A';
         }
 
+        // กำหนดระดับและคำอธิบายสำหรับข้อมูลความเสี่ยง/โอกาส
         riskOpportunityData.forEach(item => {
             item.level = calculateLevel(item.type, item.likelihood_score, item.impact_score);
             if (item.type === 'Risk') {
@@ -502,21 +536,22 @@
             }
         });
 
-        const kpiCharts = {};
-        let lineChartInstance = null;
-        let roSummaryChartInstance = null;
-        let combinedTrendChartInstance = null; // Chart.js instance for combined trend
-        let processErrorsTrendChartInstance = null; // New Chart.js instance for process errors trend
+
+        const kpiCharts = {}; // เก็บ instance ของ Chart.js เพื่อทำลายและสร้างใหม่
+        let lineChartInstance = null; // เก็บ instance ของ Line Chart ใน Modal
+        let riskSummaryChartInstance = null; // เก็บ instance ของ Risk Summary Chart
+        let opportunitySummaryChartInstance = null; // เก็บ instance ของ Opportunity Summary Chart
+        let individualTrendChartInstances = {}; // เก็บ instance ของ Line Chart สำหรับแต่ละ KPI
 
         const kpiRiskSection = document.getElementById('kpi-risk-section');
-        const combinedTrendSection = document.getElementById('combined-trend-section'); // New section element
+        const combinedTrendSection = document.getElementById('combined-trend-section');
         const quizSection = document.getElementById('quiz-section');
-        const documentFormsSection = document.getElementById('document-forms-section'); // New section element
+        const documentFormsSection = document.getElementById('document-forms-section');
 
         const navKpiRiskBtn = document.getElementById('nav-kpi-risk');
-        const navCombinedTrendBtn = document.getElementById('nav-combined-trend'); // New navigation button
+        const navCombinedTrendBtn = document.getElementById('nav-combined-trend');
         const navQuizBtn = document.getElementById('nav-quiz');
-        const navDocumentFormsBtn = document.getElementById('nav-document-forms'); // New navigation button
+        const navDocumentFormsBtn = document.getElementById('nav-document-forms');
 
         const grid = document.getElementById('kpi-grid');
         const modal = document.getElementById('kpi-modal');
@@ -534,45 +569,10 @@
         const roModalBody = document.getElementById('ro-modal-body');
         const roModalCloseBtn = document.getElementById('ro-modal-close-btn');
 
-        // Populate month selector with default data for now since Firebase is commented out
-        for (let i = 0; i < 12; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = monthNames[i];
-            monthSelect.appendChild(option);
-        }
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        // Use defaultKpiStructure for initial month data if Firebase is not active
-        if (defaultKpiStructure[0].monthlyData[currentMonth]) {
-            currentMonthIndex = currentMonth;
-        } else {
-            const availableMonths = Object.keys(defaultKpiStructure[0].monthlyData).map(key => parseInt(key)).sort((a, b) => a - b);
-            currentMonthIndex = availableMonths.length > 0 ? availableMonths[availableMonths.length - 1] : 0;
-        }
-        monthSelect.value = currentMonthIndex;
-        loadingOverlay.classList.add('hidden'); // Hide loading overlay immediately if no Firebase
+        let currentMonthIndex = 0; // ติดตามเดือนที่เลือกปัจจุบัน
+        const monthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
-        const wrapLabel = (label, maxCharPerLine = 16) => {
-            if (typeof label !== 'string' || label.length <= maxCharPerLine) {
-                return label;
-            }
-            const words = label.split(' ');
-            let lines = [];
-            let currentLine = '';
-
-            words.forEach(word => {
-                if ((currentLine + word).length > maxCharPerLine && currentLine !== '') {
-                    lines.push(currentLine.trim());
-                    currentLine = word + ' ';
-                } else {
-                    currentLine += word + ' ';
-                }
-            });
-            lines.push(currentLine.trim());
-            return lines;
-        };
-
+        // ฟังก์ชันสร้าง Gauge Chart
         const createGaugeChart = (canvasId, value, target, unit) => {
             const ctx = document.getElementById(canvasId);
             if (!ctx) return;
@@ -580,13 +580,13 @@
             const data = {
                 datasets: [{
                     data: [target, max - target],
-                    backgroundColor: ['#e0e0e0', '#bdbdbd'],
+                    backgroundColor: ['#e0e0e0', '#bdbdbd'], // สีเทาสำหรับพื้นหลังเป้าหมาย
                     borderWidth: 0,
                     circumference: 180,
                     rotation: 270,
                 }, {
                     data: [value, max - value],
-                    backgroundColor: [getPerformanceColor(value, target, false), 'rgba(0,0,0,0)'],
+                    backgroundColor: [getPerformanceColor(value, target, false), 'rgba(0,0,0,0)'], // สีค่าจริง
                     borderWidth: 0,
                     circumference: 180,
                     rotation: 270,
@@ -620,13 +620,13 @@
                         ctx.save();
                         let centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
                         let centerY = (chart.chartArea.top + chart.chartArea.bottom) / 1.5; // ปรับ Y สำหรับตำแหน่งข้อความ
-                        ctx.fillStyle = '#000000'; // Changed to black
+                        ctx.fillStyle = '#000000'; // สีดำสำหรับค่า
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'baseline';
                         ctx.font = 'bold 2.5rem Sarabun';
                         ctx.fillText(value + unit, centerX, centerY);
                         ctx.font = 'normal 1rem Sarabun';
-                        ctx.fillStyle = '#000000'; // Changed to black
+                        ctx.fillStyle = '#000000'; // สีดำสำหรับเป้าหมาย
                         ctx.fillText(`เป้าหมาย: ${target}${unit}`, centerX, centerY + 24);
                         ctx.restore();
                     }
@@ -634,16 +634,20 @@
             });
         };
 
+        // ฟังก์ชันสร้าง Sparkline Chart
         const createSparklineChart = (canvasId, currentValues, targetValues, unit, lineColorForCurrent) => {
             const ctx = document.getElementById(canvasId);
             if (!ctx) return;
 
-            // Destroy existing chart instance if it exists
             if (kpiCharts[canvasId]) {
                 kpiCharts[canvasId].destroy();
             }
 
-            const labels = monthNames.slice(Math.max(0, currentMonthIndex - 5), currentMonthIndex + 1); // Last 6 months
+            // แสดงข้อมูลย้อนหลัง 6 เดือน รวมถึงเดือนปัจจุบัน
+            const labels = monthNames.slice(Math.max(0, currentMonthIndex - 5), currentMonthIndex + 1);
+            const dataSliceCurrent = currentValues.slice(Math.max(0, currentMonthIndex - 5), currentMonthIndex + 1);
+            const dataSliceTarget = targetValues.slice(Math.max(0, currentMonthIndex - 5), currentMonthIndex + 1);
+
 
             kpiCharts[canvasId] = new Chart(ctx, {
                 type: 'line',
@@ -652,22 +656,22 @@
                     datasets: [
                         {
                             label: 'ค่าปัจจุบัน',
-                            data: currentValues,
+                            data: dataSliceCurrent,
                             borderColor: lineColorForCurrent,
-                            backgroundColor: lineColorForCurrent + '40', // Add some transparency for fill
+                            backgroundColor: lineColorForCurrent + '40',
                             borderWidth: 2,
-                            pointRadius: 3, // Show points
-                            tension: 0.4, // Smooth line
+                            pointRadius: 3,
+                            tension: 0.4,
                             fill: true
                         },
                         {
                             label: 'เป้าหมาย',
-                            data: targetValues,
-                            borderColor: '#14b8a6', // A distinct color for target, e.g., emerald
-                            backgroundColor: 'rgba(0,0,0,0)', // No fill for target
+                            data: dataSliceTarget,
+                            borderColor: '#14b8a6',
+                            backgroundColor: 'rgba(0,0,0,0)',
                             borderWidth: 1,
-                            pointRadius: 0, // No points for target
-                            borderDash: [2, 2], // Dashed line for target
+                            pointRadius: 0,
+                            borderDash: [2, 2],
                             tension: 0.4,
                             fill: false
                         }
@@ -678,25 +682,25 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: { enabled: false }
+                        tooltip: { enabled: false } // ปิด tooltip สำหรับ sparkline
                     },
                     scales: {
                         x: {
-                            display: true, // Show x-axis
-                            grid: { display: false }, // Hide grid lines
+                            display: true,
+                            grid: { display: false },
                             ticks: {
                                 font: { size: 8, family: 'Sarabun' },
                                 maxRotation: 0,
                                 minRotation: 0,
-                                color: '#000000' // Black color for ticks
+                                color: '#000000'
                             }
                         },
                         y: {
-                            display: true, // Show y-axis labels
-                            grid: { display: false }, // Hide grid lines
+                            display: true,
+                            grid: { display: false },
                             ticks: {
                                 font: { size: 8, family: 'Sarabun' },
-                                color: '#000000' // Black color for ticks
+                                color: '#000000'
                             }
                         }
                     },
@@ -709,6 +713,7 @@
             });
         };
 
+        // ฟังก์ชันสร้าง Line Chart สำหรับ Modal รายละเอียด
         const createLineChart = (canvasId, labels, currentValues, targetValues, unit) => {
             const ctx = document.getElementById(canvasId);
             if (!ctx) return;
@@ -725,8 +730,8 @@
                         {
                             label: 'ค่าปัจจุบัน',
                             data: currentValues,
-                            borderColor: '#0284c7', /* Brighter blue for current value line */
-                            backgroundColor: 'rgba(2, 132, 199, 0.2)', /* Brighter blue for fill */
+                            borderColor: '#0284c7',
+                            backgroundColor: 'rgba(2, 132, 199, 0.2)',
                             fill: true,
                             tension: 0.3,
                             pointRadius: 5,
@@ -739,8 +744,8 @@
                         {
                             label: 'เป้าหมาย',
                             data: targetValues,
-                            borderColor: '#14b8a6', /* Brighter green for target line */
-                            backgroundColor: 'rgba(20, 184, 166, 0.1)', /* Brighter green for fill */
+                            borderColor: '#14b8a6',
+                            backgroundColor: 'rgba(20, 184, 166, 0.1)',
                             fill: false,
                             tension: 0.3,
                             pointRadius: 0,
@@ -757,7 +762,7 @@
                             labels: {
                                 font: {
                                     family: 'Sarabun',
-                                    color: '#000000' // Set legend label color to black
+                                    color: '#000000'
                                 }
                             }
                         },
@@ -783,10 +788,10 @@
                             title: {
                                 display: true,
                                 text: 'เดือน',
-                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis title color to black
+                                font: { family: 'Sarabun', color: '#000000' }
                             },
                             ticks: {
-                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis tick color to black
+                                font: { family: 'Sarabun', color: '#000000' }
                             }
                         },
                         y: {
@@ -794,10 +799,110 @@
                             title: {
                                 display: true,
                                 text: `ค่า (${unit})`,
-                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis title color to black
+                                font: { family: 'Sarabun', color: '#000000' }
                             },
                             ticks: {
-                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis tick color to black
+                                font: { family: 'Sarabun', color: '#000000' }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        // New function for individual line charts
+        const createIndividualLineChart = (canvasId, labels, currentValues, targetValues, unit, kpiTitle, lowerIsBetter) => {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            if (individualTrendChartInstances[canvasId]) {
+                individualTrendChartInstances[canvasId].destroy();
+            }
+
+            // Determine target line color based on lowerIsBetter for consistency
+            const targetLineColor = lowerIsBetter ? '#ef4444' : '#14b8a6'; // Red for lowerIsBetter target, Green otherwise
+
+            individualTrendChartInstances[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'ค่าปัจจุบัน',
+                            data: currentValues,
+                            borderColor: '#0284c7', // Blue for current value
+                            backgroundColor: 'rgba(2, 132, 199, 0.2)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#0284c7',
+                            pointBorderColor: '#fff',
+                            pointHoverRadius: 7,
+                            pointHoverBackgroundColor: '#0284c7',
+                            pointHoverBorderColor: '#fff'
+                        },
+                        {
+                            label: 'เป้าหมาย',
+                            data: targetValues,
+                            borderColor: targetLineColor,
+                            backgroundColor: 'rgba(0,0,0,0)',
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 0,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'Sarabun',
+                                    color: '#000000'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + unit;
+                                    }
+                                    return label;
+                                }
+                            },
+                            titleFont: { family: 'Sarabun', size: 14 },
+                            bodyFont: { family: 'Sarabun', size: 12 }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'เดือน',
+                                font: { family: 'Sarabun', color: '#000000' }
+                            },
+                            ticks: {
+                                font: { family: 'Sarabun', color: '#000000' }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: `ค่า (${unit})`,
+                                font: { family: 'Sarabun', color: '#000000' }
+                            },
+                            ticks: {
+                                font: { family: 'Sarabun', color: '#000000' }
                             }
                         }
                     }
@@ -805,20 +910,22 @@
             });
         };
         
+        // ฟังก์ชันกำหนดสีตามประสิทธิภาพ
         const getPerformanceColor = (value, target, lowerIsBetter = false) => {
-            if (lowerIsBetter) {
-                if (value <= target * 0.75) return '#14b8a6'; /* Teal 500 */
-                if (value <= target) return '#0284c7'; /* Sky 600 */
-                if (value <= target * 1.25) return '#f59e0b'; /* Amber 500 */
-                return '#f43f5e'; /* Rose 500 */
-            } else {
-                if (value >= target) return '#14b8a6'; /* Teal 500 */
-                if (value >= target * 0.9) return '#0284c7'; /* Sky 600 */
-                if (value >= target * 0.8) return '#f59e0b'; /* Amber 500 */
-                return '#f43f5e'; /* Rose 500 */
+            if (lowerIsBetter) { // สำหรับ KPI ที่ค่าน้อยกว่าดีกว่า (เช่น ข้อผิดพลาด)
+                if (value <= target * 0.75) return '#14b8a6'; // เขียว (ยอดเยี่ยม)
+                if (value <= target) return '#0284c7'; // น้ำเงิน (ดี, อยู่ในเป้าหมาย)
+                if (value <= target * 1.25) return '#f59e0b'; // ส้ม (สูงกว่าเป้าหมายเล็กน้อย)
+                return '#f43f5e'; // แดง (สูงกว่าเป้าหมายมาก)
+            } else { // สำหรับ KPI ที่ค่าสูงกว่าดีกว่า (เช่น เปอร์เซ็นต์)
+                if (value >= target) return '#14b8a6'; // เขียว (บรรลุหรือเกินเป้าหมาย)
+                if (value >= target * 0.9) return '#0284c7'; // น้ำเงิน (ใกล้เคียงเป้าหมาย)
+                if (value >= target * 0.8) return '#f59e0b'; // ส้ม (ต่ำกว่าเป้าหมาย แต่ยังพอรับได้)
+                return '#f43f5e'; // แดง (ต่ำกว่าเป้าหมายมาก)
             }
         };
         
+        // ฟังก์ชันรับข้อความสถานะ
         const getStatusText = (value, target, lowerIsBetter = false) => {
             if (value === 'N/A' || target === 'N/A') return 'ไม่มีข้อมูล';
             if (lowerIsBetter) {
@@ -830,8 +937,40 @@
             }
         }
 
+        // ฟังก์ชัน Populate month selector
+        const populateMonthSelector = () => {
+            monthSelect.innerHTML = '';
+            // Ensure kpiData is available before proceeding
+            if (!kpiData || kpiData.length === 0 || !kpiData[0].monthlyData) {
+                console.warn("KPI data not available for month selector population.");
+                return;
+            }
+
+            const months = Object.keys(kpiData[0].monthlyData).map(key => parseInt(key)).sort((a,b) => a-b);
+            
+            months.forEach(monthIndex => {
+                const option = document.createElement('option');
+                option.value = monthIndex;
+                option.textContent = monthNames[monthIndex];
+                monthSelect.appendChild(option);
+            });
+
+            // Set currentMonthIndex based on current date or last available data
+            const today = new Date();
+            const currentMonth = today.getMonth(); // 0-11
+            if (kpiData[0].monthlyData[currentMonth]) {
+                currentMonthIndex = currentMonth;
+            } else {
+                currentMonthIndex = months.length > 0 ? months[months.length - 1] : 0;
+            }
+            monthSelect.value = currentMonthIndex;
+        };
+
+
+        // ฟังก์ชัน Render การ์ด KPI
         const renderKpiCards = (monthIndex) => {
-            grid.innerHTML = '';
+            grid.innerHTML = ''; // ล้างการ์ดที่มีอยู่
+            // ทำลาย instance ของ Chart เก่าทั้งหมด
             for (const chartId in kpiCharts) {
                 if (kpiCharts[chartId]) {
                     kpiCharts[chartId].destroy();
@@ -839,10 +978,7 @@
                 }
             }
 
-            // Use defaultKpiStructure if kpiDataFromFirestore is empty (e.g., Firebase not active)
-            const kpiDataToUse = kpiDataFromFirestore.length > 0 ? kpiDataFromFirestore : defaultKpiStructure;
-
-            kpiDataToUse.forEach(kpi => {
+            kpiData.forEach(kpi => {
                 const monthlyKpi = kpi.monthlyData[monthIndex];
                 const prevMonthlyKpi = kpi.monthlyData[monthIndex - 1];
 
@@ -859,18 +995,16 @@
 
                     if (change > 0) {
                         arrow = '▲';
-                        changeColor = kpi.lowerIsBetter ? 'text-rose-600' : 'text-emerald-600'; // If lower is better, increase is bad (rose). If higher is better, increase is good (emerald).
+                        changeColor = kpi.lowerIsBetter ? 'text-rose-600' : 'text-emerald-600';
                     } else if (change < 0) {
                         arrow = '▼';
-                        changeColor = kpi.lowerIsBetter ? 'text-emerald-600' : 'text-rose-600'; // If lower is better, decrease is good (emerald). If higher is better, decrease is bad (rose).
+                        changeColor = kpi.lowerIsBetter ? 'text-emerald-600' : 'text-rose-600';
                     }
 
                     changeIndicatorHtml = `<span class="${changeColor} text-shadow-subtle">${Math.abs(percentageChange).toFixed(1)}% ${arrow}</span>`;
                 }
 
-
                 const card = document.createElement('div');
-                // Added bg-opacity-75 for transparency
                 card.className = 'bg-white bg-opacity-75 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105';
                 
                 let vizHtml = '';
@@ -880,23 +1014,22 @@
                     } else {
                         vizHtml = `<div class="h-[150px] flex flex-col justify-center items-center">
                                          <p class="kpi-value-lg font-bold text-gray-400 text-shadow-subtle">N/A</p>
-                                         <p class="text-gray-900 text-lg text-shadow-subtle">${kpi.unit}</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                         <p class="text-gray-900 text-shadow-subtle">เป้าหมาย: N/A ${kpi.unit}</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                         <p class="text-gray-900 text-lg text-shadow-subtle">${kpi.unit}</p>
+                                         <p class="text-gray-900 text-shadow-subtle">เป้าหมาย: N/A ${kpi.unit}</p>
                                        </div>`;
                     }
                 } else {
                     const colorClass = (currentValue !== 'N/A' && targetValue !== 'N/A') ? getPerformanceColor(currentValue, targetValue, kpi.lowerIsBetter) : 'text-gray-400';
                     vizHtml = `<div class="h-[150px] flex flex-col justify-center items-center">
                                  <p class="kpi-value-lg font-bold text-shadow-subtle" style="color: ${colorClass};">${currentValue}</p>
-                                 <p class="text-gray-900 text-lg text-shadow-subtle">${kpi.unit}</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                 <p class="text-gray-900 text-shadow-subtle">เป้าหมาย: ${kpi.lowerIsBetter ? '≤ ' : ''}${targetValue} ${kpi.unit}</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                 <p class="text-gray-900 text-lg text-shadow-subtle">${kpi.unit}</p>
+                                 <p class="text-gray-900 text-shadow-subtle">เป้าหมาย: ${kpi.lowerIsBetter ? '≤ ' : ''}${targetValue} ${kpi.unit}</p>
                                </div>`;
                 }
 
-                // Prepare data for sparkline (last 6 months)
                 const sparklineCurrentValues = [];
                 const sparklineTargetValues = [];
-                for (let i = Math.max(0, monthIndex - 5); i <= monthIndex; i++) {
+                for (let i = 0; i < 12; i++) { // ดึงข้อมูลทั้ง 12 เดือนสำหรับ sparkline
                     sparklineCurrentValues.push(kpi.monthlyData[i] ? kpi.monthlyData[i].currentValue : null);
                     sparklineTargetValues.push(kpi.monthlyData[i] ? kpi.monthlyData[i].target : null);
                 }
@@ -917,25 +1050,25 @@
                         <canvas id="${kpi.id}-sparkline"></canvas>
                     </div>
                     <p class="mt-4 text-gray-900 text-shadow-subtle">${getStatusText(currentValue, targetValue, kpi.lowerIsBetter)}</p>
-                    <button data-id="${kpi.id}" class="details-btn mt-6 bg-blue-200 text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-blue-300 transition-colors">
-                        ดูรายละเอียด
-                    </button>
-                    <!-- Edit button is removed as Firebase functionality is commented out -->
+                    <div class="flex space-x-2 mt-6">
+                        <button data-id="${kpi.id}" class="details-btn bg-blue-200 text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-blue-300 transition-colors">
+                            ดูรายละเอียด
+                        </button>
+                    </div>
                 `;
                 grid.appendChild(card);
 
                 if (kpi.type === 'percentage' && currentValue !== 'N/A' && targetValue !== 'N/A') {
                     setTimeout(() => createGaugeChart(kpi.id, currentValue, targetValue, kpi.unit), 0);
                 }
-                // Render sparkline for all KPIs
                 setTimeout(() => createSparklineChart(kpi.id + '-sparkline', sparklineCurrentValues, sparklineTargetValues, kpi.unit, sparklineColor), 0);
             });
 
+            // แนบ Event Listener สำหรับปุ่มดูรายละเอียด
             document.querySelectorAll('.details-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const kpiId = e.currentTarget.dataset.id;
-                    // Use defaultKpiStructure if kpiDataFromFirestore is empty
-                    const kpi = (kpiDataFromFirestore.length > 0 ? kpiDataFromFirestore : defaultKpiStructure).find(k => k.id === kpiId);
+                    const kpi = kpiData.find(k => k.id === kpiId);
                     const monthlyKpi = kpi.monthlyData[currentMonthIndex];
 
                     const chartLabels = [];
@@ -952,25 +1085,25 @@
                     modalBody.innerHTML = `
                         <div class="space-y-3">
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ดัชนีชี้วัด:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-shadow-subtle">${kpi.details.indicator}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ดัชนีชี้วัด:</p>
+                                <p class="text-shadow-subtle">${kpi.details.indicator}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">เป้าหมาย:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">เป้าหมาย:</p>
                                 <p class="text-lg font-bold ${kpi.lowerIsBetter ? 'text-blue-600' : 'text-emerald-600'} text-shadow-subtle">
                                     ${kpi.lowerIsBetter ? 'ไม่เกิน ' : ''}${monthlyKpi ? monthlyKpi.target : 'N/A'} ${kpi.unit}
                                 </p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ความถี่ในการประเมิน:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-shadow-subtle">${kpi.details.frequency}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ความถี่ในการประเมิน:</p>
+                                <p class="text-shadow-subtle">${kpi.details.frequency}</p>
                             </div>
                              <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">วิธีการประเมิน:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-sm text-shadow-subtle">${kpi.details.evaluation}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">วิธีการประเมิน:</p>
+                                <p class="text-sm text-shadow-subtle">${kpi.details.evaluation}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">เกณฑ์การให้คะแนน:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">เกณฑ์การให้คะแนน:</p>
                                 <ul class="list-none space-y-1 mt-1">
                                     ${kpi.details.levels.map(l => `
                                         <li class="flex items-center justify-between p-2 rounded-md bg-gray-50">
@@ -981,7 +1114,7 @@
                                 </ul>
                             </div>
                             <div class="mt-6">
-                                <h3 class="text-xl font-semibold mb-3 text-black text-shadow-subtle">แนวโน้มรายเดือน</h3> <!-- Changed to text-black and added text-shadow-subtle -->
+                                <h3 class="text-xl font-semibold mb-3 text-black text-shadow-subtle">แนวโน้มรายเดือน</h3>
                                 <div class="chart-container-line">
                                     <canvas id="kpiLineChart"></canvas>
                                 </div>
@@ -993,7 +1126,6 @@
                     setTimeout(() => {
                         modalContent.classList.remove('scale-95', 'opacity-0');
                         modalContent.classList.add('scale-100', 'opacity-100');
-                        // Ensure createLineChart is called after modal is visible and canvas is rendered
                         const kpiLineChartCanvas = document.getElementById('kpiLineChart');
                         if (kpiLineChartCanvas) {
                             createLineChart('kpiLineChart', chartLabels, chartCurrentValues, chartTargetValues, kpi.unit);
@@ -1001,29 +1133,6 @@
                     }, 10);
                 });
             });
-
-            // Edit Data Modal is no longer functional without Firebase
-            // document.querySelectorAll('.edit-btn').forEach(button => {
-            //     button.addEventListener('click', (e) => {
-            //         const kpiId = e.currentTarget.dataset.id;
-            //         const kpi = kpiDataFromFirestore.find(k => k.id === kpiId);
-            //         const monthlyKpi = kpi.monthlyData[currentMonthIndex];
-
-            //         editKpiIdInput.value = kpiId;
-            //         editMonthIndexInput.value = currentMonthIndex;
-            //         editCurrentValueInput.value = monthlyKpi ? monthlyKpi.currentValue : '';
-            //         editTargetValueInput.value = monthlyKpi ? monthlyKpi.target : '';
-                    
-            //         editModalTitle.textContent = `แก้ไขข้อมูล ${kpi.title} (${monthNames[currentMonthIndex]})`;
-            //         saveStatusMessage.classList.add('hidden'); // ซ่อนข้อความสถานะก่อนหน้า
-
-            //         editKpiModal.classList.remove('hidden');
-            //         setTimeout(() => {
-            //             editModalContent.classList.remove('scale-95', 'opacity-0');
-            //             editModalContent.classList.add('scale-100', 'opacity-100');
-            //         }, 10);
-            //     });
-            // });
         };
 
         const closeModal = () => {
@@ -1038,12 +1147,6 @@
             }, 300);
         };
 
-        const closeRoModal = () => {
-            roModalContent.classList.remove('scale-100', 'opacity-100');
-            roModalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => roModal.classList.add('hidden'), 300);
-        };
-
         modalCloseBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
@@ -1051,69 +1154,19 @@
             }
         });
 
-        roModalCloseBtn.addEventListener('click', closeRoModal);
-        roModal.addEventListener('click', (e) => {
-            if (e.target === roModal) {
-                closeRoModal();
-            }
-        });
-
-        // Save KPI Data (commented out as Firebase is not active)
-        // saveKpiDataBtn.addEventListener('click', async () => {
-        //     const kpiId = editKpiIdInput.value;
-        //     const monthIndex = editMonthIndexInput.value;
-        //     const newCurrentValue = parseFloat(editCurrentValueInput.value);
-        //     const newTargetValue = parseFloat(editTargetValueInput.value);
-
-        //     if (isNaN(newCurrentValue) || isNaN(newTargetValue)) {
-        //         saveStatusMessage.textContent = 'กรุณากรอกข้อมูลให้ครบถ้วนและเป็นตัวเลข';
-        //         saveStatusMessage.className = 'text-center text-sm mt-2 text-red-600';
-        //         saveStatusMessage.classList.remove('hidden');
-        //         return;
-        //     }
-
-        //     try {
-        //         const kpiRef = doc(db, `artifacts/${appIdForFirestore}/users/${userId}/kpi_data`, kpiId);
-                
-        //         const kpiToUpdate = kpiDataFromFirestore.find(k => k.id === kpiId);
-        //         if (!kpiToUpdate) {
-        //             throw new Error("ไม่พบ KPI ในข้อมูลท้องถิ่น");
-        //         }
-
-        //         const updatedMonthlyData = { ...kpiToUpdate.monthlyData };
-        //         updatedMonthlyData[monthIndex] = {
-        //             currentValue: newCurrentValue,
-        //             target: newTargetValue
-        //         };
-
-        //         await setDoc(kpiRef, { monthlyData: updatedMonthlyData }, { merge: true });
-
-        //         saveStatusMessage.textContent = 'บันทึกข้อมูลสำเร็จ!';
-        //         saveStatusMessage.className = 'text-center text-sm mt-2 text-emerald-600';
-        //         saveStatusMessage.classList.remove('hidden');
-        //         setTimeout(closeEditModal, 1000);
-        //     } catch (error) {
-        //         console.error("Error saving KPI data:", error);
-        //         saveStatusMessage.textContent = `เกิดข้อผิดพลาดในการบันทึกข้อมูล: ${error.message}`;
-        //         saveStatusMessage.className = 'text-center text-sm mt-2 text-red-600';
-        //         saveStatusMessage.classList.remove('hidden');
-        //     }
-        // });
-
         const renderRiskOpportunityCards = () => {
             riskOpportunityGrid.innerHTML = '';
             riskOpportunityData.forEach(item => {
                 const card = document.createElement('div');
-                const typeColor = item.type === 'Risk' ? 'bg-rose-100' : 'bg-emerald-100'; /* Brighter colors */
-                const textColor = item.type === 'Risk' ? 'text-rose-700' : 'text-emerald-700'; /* Brighter colors */
-                const levelColor = item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600'); /* Brighter colors */
+                const typeColor = item.type === 'Risk' ? 'bg-rose-100' : 'bg-emerald-100';
+                const textColor = item.type === 'Risk' ? 'text-rose-700' : 'text-emerald-700';
+                const levelColor = item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600');
 
-                // Changed to bg-opacity-75 for transparency
                 card.className = `bg-white bg-opacity-75 rounded-xl shadow-lg p-6 flex flex-col items-center text-center transition-transform duration-300 hover:scale-105 ${typeColor}`;
                 card.innerHTML = `
-                    <div class="text-lg font-bold mb-2 ${textColor} text-shadow-subtle">${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}</div> <!-- Added text-shadow-subtle -->
-                    <h3 class="text-xl font-bold mb-3 text-black text-shadow-subtle">${item.issue}</h3> <!-- Changed to text-black and added text-shadow-subtle -->
-                    <p class="text-2xl font-bold ${levelColor} mb-4 text-shadow-subtle">ระดับ: ${item.level}</p> <!-- Added text-shadow-subtle -->
+                    <div class="text-lg font-bold mb-2 ${textColor} text-shadow-subtle">${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}</div>
+                    <h3 class="text-xl font-bold mb-3 text-black text-shadow-subtle">${item.issue}</h3>
+                    <p class="text-2xl font-bold ${levelColor} mb-4 text-shadow-subtle">ระดับ: ${item.level}</p>
                     <button data-id="${item.id}" class="ro-details-btn mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
                         ดูรายละเอียด
                     </button>
@@ -1130,28 +1183,28 @@
                     roModalBody.innerHTML = `
                         <div class="space-y-3">
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ประเด็น:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-shadow-subtle">${item.issue}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ประเด็น:</p>
+                                <p class="text-shadow-subtle">${item.issue}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">สาเหตุ:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-shadow-subtle">${item.cause}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">สาเหตุ:</p>
+                                <p class="text-shadow-subtle">${item.cause}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">โอกาสที่จะเกิดขึ้น (ระดับ ${item.likelihood_score}):</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-shadow-subtle">${item.likelihood_desc}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">โอกาสที่จะเกิดขึ้น (ระดับ ${item.likelihood_score}):</p>
+                                <p class="text-shadow-subtle">${item.likelihood_desc}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ผลกระทบ (ระดับ ${item.impact_score}):</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-shadow-subtle">${item.impact_desc}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ผลกระทบ (ระดับ ${item.impact_score}):</p>
+                                <p class="text-shadow-subtle">${item.impact_desc}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">ระดับ ${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-xl font-bold ${item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600')} text-shadow-subtle">${item.level}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">ระดับ ${item.type === 'Risk' ? 'ความเสี่ยง' : 'โอกาส'}:</p>
+                                <p class="text-xl font-bold ${item.level === 'สูง' ? 'text-rose-600' : (item.level === 'ปานกลาง' ? 'text-amber-600' : 'text-emerald-600')} text-shadow-subtle">${item.level}</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 text-shadow-subtle">มาตรการ:</p> <!-- Changed to text-gray-900 and added text-shadow-subtle -->
-                                <p class="text-shadow-subtle">${item.mitigation}</p> <!-- Added text-shadow-subtle -->
+                                <p class="font-semibold text-gray-900 text-shadow-subtle">มาตรการ:</p>
+                                <p class="text-shadow-subtle">${item.mitigation}</p>
                             </div>
                         </div>
                     `;
@@ -1165,7 +1218,20 @@
             });
         };
 
-        const renderRiskOpportunitySummaryChart = () => {
+        const closeRoModal = () => {
+            roModalContent.classList.remove('scale-100', 'opacity-100');
+            roModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => roModal.classList.add('hidden'), 300);
+        };
+
+        roModalCloseBtn.addEventListener('click', closeRoModal);
+        roModal.addEventListener('click', (e) => {
+            if (e.target === roModal) {
+                closeRoModal();
+            }
+        });
+
+        const renderRiskOpportunitySummaryCharts = () => {
             const risksByLevel = { 'ต่ำ': [], 'ปานกลาง': [], 'สูง': [] };
             const opportunitiesByLevel = { 'ต่ำ': [], 'ปานกลาง': [], 'สูง': [] };
 
@@ -1178,15 +1244,14 @@
             });
 
             const labels = ['ต่ำ', 'ปานกลาง', 'สูง'];
+
+            // Render Risk Summary Chart
             const riskCounts = labels.map(level => risksByLevel[level].length);
-            const opportunityCounts = labels.map(level => opportunitiesByLevel[level].length);
-
-            const ctx = document.getElementById('riskOpportunitySummaryChart').getContext('2d');
-            if (roSummaryChartInstance) {
-                roSummaryChartInstance.destroy();
+            const ctxRisk = document.getElementById('riskSummaryChart').getContext('2d');
+            if (riskSummaryChartInstance) {
+                riskSummaryChartInstance.destroy();
             }
-
-            roSummaryChartInstance = new Chart(ctx, {
+            riskSummaryChartInstance = new Chart(ctxRisk, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -1194,16 +1259,10 @@
                         {
                             label: 'ความเสี่ยง',
                             data: riskCounts,
-                            backgroundColor: '#f43f5e', /* Rose 500 */
-                            borderColor: '#f43f5e',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'โอกาส',
-                            data: opportunityCounts,
-                            backgroundColor: '#10b981', /* Emerald 500 */
-                            borderColor: '#10b981',
-                            borderWidth: 1
+                            backgroundColor: '#f43f5e', // Rose-500
+                            borderColor: '#e11d48', // Rose-600 (darker border)
+                            borderWidth: 1,
+                            borderRadius: 8, // Rounded corners
                         }
                     ]
                 },
@@ -1216,7 +1275,7 @@
                             labels: {
                                 font: {
                                     family: 'Sarabun',
-                                    color: '#000000' // Set legend label color to black
+                                    color: '#000000'
                                 }
                             }
                         },
@@ -1231,16 +1290,8 @@
                                 },
                                 afterBody: function(tooltipItems) {
                                     const item = tooltipItems[0];
-                                    const datasetLabel = item.dataset.label;
                                     const level = item.label;
-                                    
-                                    let issues = [];
-                                    if (datasetLabel === 'ความเสี่ยง') {
-                                        issues = risksByLevel[level];
-                                    } else if (datasetLabel === 'โอกาส') {
-                                        issues = opportunitiesByLevel[level];
-                                    }
-
+                                    const issues = risksByLevel[level];
                                     if (issues.length > 0) {
                                         return issues.map(issue => `- ${issue}`);
                                     }
@@ -1249,6 +1300,19 @@
                             },
                             titleFont: { family: 'Sarabun', size: 16 },
                             bodyFont: { family: 'Sarabun', size: 14 }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                family: 'Sarabun',
+                                size: 12
+                            },
+                            formatter: function(value, context) {
+                                return value > 0 ? value : '';
+                            }
                         }
                     },
                     scales: {
@@ -1256,10 +1320,13 @@
                             title: {
                                 display: true,
                                 text: 'ระดับ',
-                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis title color to black
+                                font: { family: 'Sarabun', color: '#000000' }
+                            },
+                            grid: {
+                                display: false
                             },
                             ticks: {
-                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis tick color to black
+                                font: { family: 'Sarabun', color: '#000000' }
                             }
                         },
                         y: {
@@ -1267,77 +1334,42 @@
                             title: {
                                 display: true,
                                 text: 'จำนวน',
-                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis title color to black
+                                font: { family: 'Sarabun', color: '#000000' }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)',
+                                borderDash: [2, 2]
                             },
                             ticks: {
                                 stepSize: 1,
-                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis tick color to black
+                                font: { family: 'Sarabun', color: '#000000' }
                             }
                         }
                     }
-                }
-            });
-        };
-
-        const renderCombinedTrendSummaryChart = () => {
-            const combinedCtx = document.getElementById('combinedTrendChart');
-            const processErrorsCtx = document.getElementById('processErrorsTrendChart');
-
-            if (!combinedCtx || !processErrorsCtx) return;
-
-            if (combinedTrendChartInstance) {
-                combinedTrendChartInstance.destroy();
-            }
-            if (processErrorsTrendChartInstance) {
-                processErrorsTrendChartInstance.destroy();
-            }
-
-            // Use defaultKpiStructure if kpiDataFromFirestore is empty
-            const kpiDataToUse = kpiDataFromFirestore.length > 0 ? kpiDataFromFirestore : defaultKpiStructure;
-
-            // Separate Process Errors KPI
-            const processErrorsKpi = kpiDataToUse.find(kpi => kpi.id === 'processErrors');
-            const otherKpis = kpiDataToUse.filter(kpi => kpi.id !== 'processErrors');
-
-            // --- Render Combined Trend Chart for Other KPIs ---
-            const otherKpiDatasets = otherKpis.map((kpi, index) => {
-                const currentValues = [];
-                for (let i = 0; i < 12; i++) {
-                    const monthData = kpi.monthlyData[i.toString()];
-                    currentValues.push(monthData ? monthData.currentValue : null);
-                }
-
-                // Define a set of distinct colors for each KPI line
-                const colors = [
-                    '#0284c7', // Sky Blue
-                    '#14b8a6', // Teal
-                    '#f59e0b', // Amber
-                    '#8b5cf6', // Violet
-                    '#ec4899', // Pink
-                    '#22c55e', // Green
-                    '#eab308'  // Yellow
-                ];
-                const lineColor = colors[index % colors.length];
-
-                return {
-                    label: kpi.title + ' (ค่าปัจจุบัน)',
-                    data: currentValues,
-                    borderColor: lineColor,
-                    backgroundColor: lineColor + '20', // Light transparent fill
-                    fill: false,
-                    tension: 0.3,
-                    pointRadius: 3,
-                    pointBackgroundColor: lineColor,
-                    pointBorderColor: '#fff',
-                    pointHoverRadius: 5
-                };
+                },
+                plugins: [ChartDataLabels]
             });
 
-            combinedTrendChartInstance = new Chart(combinedCtx, {
-                type: 'line',
+            // Render Opportunity Summary Chart
+            const opportunityCounts = labels.map(level => opportunitiesByLevel[level].length);
+            const ctxOpportunity = document.getElementById('opportunitySummaryChart').getContext('2d');
+            if (opportunitySummaryChartInstance) {
+                opportunitySummaryChartInstance.destroy();
+            }
+            opportunitySummaryChartInstance = new Chart(ctxOpportunity, {
+                type: 'bar',
                 data: {
-                    labels: monthNames,
-                    datasets: otherKpiDatasets
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'โอกาส',
+                            data: opportunityCounts,
+                            backgroundColor: '#10b981', // Emerald-500
+                            borderColor: '#059669', // Emerald-600 (darker border)
+                            borderWidth: 1,
+                            borderRadius: 8, // Rounded corners
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -1348,164 +1380,139 @@
                             labels: {
                                 font: {
                                     family: 'Sarabun',
-                                    color: '#000000' // Set legend label color to black
+                                    color: '#000000'
                                 }
                             }
                         },
                         tooltip: {
                             callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    return item.dataset.label + " - " + item.label;
+                                },
                                 label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
+                                    return '';
+                                },
+                                afterBody: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    const level = item.label;
+                                    const issues = opportunitiesByLevel[level];
+                                    if (issues.length > 0) {
+                                        return issues.map(issue => `- ${issue}`);
                                     }
-                                    if (context.parsed.y !== null) {
-                                        // Find the corresponding KPI to get its unit
-                                        const kpiTitle = label.substring(0, label.indexOf('(')).trim();
-                                        const kpi = otherKpis.find(k => k.title === kpiTitle);
-                                        label += context.parsed.y + (kpi ? kpi.unit : '');
-                                    }
-                                    return label;
+                                    return [];
                                 }
                             },
-                            titleFont: { family: 'Sarabun', size: 14 },
-                            bodyFont: { family: 'Sarabun', size: 12 }
+                            titleFont: { family: 'Sarabun', size: 16 },
+                            bodyFont: { family: 'Sarabun', size: 14 }
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                family: 'Sarabun',
+                                size: 12
+                            },
+                            formatter: function(value, context) {
+                                return value > 0 ? value : '';
+                            }
                         }
                     },
                     scales: {
                         x: {
                             title: {
                                 display: true,
-                                text: 'เดือน',
-                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis title color to black
+                                text: 'ระดับ',
+                                font: { family: 'Sarabun', color: '#000000' }
+                            },
+                            grid: {
+                                display: false
                             },
                             ticks: {
-                                font: { family: 'Sarabun', color: '#000000' } // Set x-axis tick color to black
+                                font: { family: 'Sarabun', color: '#000000' }
                             }
                         },
                         y: {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'ค่า',
-                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis title color to black
+                                text: 'จำนวน',
+                                font: { family: 'Sarabun', color: '#000000' }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)',
+                                borderDash: [2, 2]
                             },
                             ticks: {
-                                font: { family: 'Sarabun', color: '#000000' } // Set y-axis tick color to black
+                                stepSize: 1,
+                                font: { family: 'Sarabun', color: '#000000' }
                             }
                         }
                     }
-                }
+                },
+                plugins: [ChartDataLabels]
             });
-
-            // --- Render Process Errors Trend Chart ---
-            if (processErrorsKpi) {
-                const processErrorsCurrentValues = [];
-                const processErrorsTargetValues = [];
-                for (let i = 0; i < 12; i++) {
-                    const monthData = processErrorsKpi.monthlyData[i.toString()];
-                    processErrorsCurrentValues.push(monthData ? monthData.currentValue : null);
-                    processErrorsTargetValues.push(monthData ? processErrorsKpi.target : null); // Assuming target is static for now, or fetch from monthlyData if it varies.
-                }
-
-                processErrorsTrendChartInstance = new Chart(processErrorsCtx, {
-                    type: 'line',
-                    data: {
-                        labels: monthNames,
-                        datasets: [
-                            {
-                                label: processErrorsKpi.title + ' (ค่าปัจจุบัน)',
-                                data: processErrorsCurrentValues,
-                                borderColor: '#ef4444', // Red for errors
-                                backgroundColor: '#ef4444' + '20',
-                                fill: true, // Fill area for errors might be good
-                                tension: 0.3,
-                                pointRadius: 3,
-                                pointBackgroundColor: '#ef4444',
-                                pointBorderColor: '#fff',
-                                pointHoverRadius: 5
-                            },
-                            {
-                                label: processErrorsKpi.title + ' (เป้าหมาย)',
-                                data: processErrorsTargetValues,
-                                borderColor: '#14b8a6', // Teal for target
-                                backgroundColor: 'rgba(0,0,0,0)',
-                                fill: false,
-                                tension: 0.3,
-                                pointRadius: 0,
-                                borderDash: [5, 5]
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    font: {
-                                        family: 'Sarabun',
-                                        color: '#000000'
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.y !== null) {
-                                            label += context.parsed.y + processErrorsKpi.unit;
-                                        }
-                                        return label;
-                                    }
-                                },
-                                titleFont: { family: 'Sarabun', size: 14 },
-                                bodyFont: { family: 'Sarabun', size: 12 }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'เดือน',
-                                    font: { family: 'Sarabun', color: '#000000' }
-                                },
-                                ticks: {
-                                    font: { family: 'Sarabun', color: '#000000' }
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: `ค่า (${processErrorsKpi.unit})`,
-                                    font: { family: 'Sarabun', color: '#000000' }
-                                },
-                                ticks: {
-                                    stepSize: 1, // Assuming error counts are integers
-                                    font: { family: 'Sarabun', color: '#000000' }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
         };
 
-        // Function to open quiz in a popup
+        const renderCombinedTrendSummaryChart = () => {
+            const container = document.getElementById('individual-trend-charts-container');
+            container.innerHTML = ''; // Clear existing charts
+
+            // Destroy all previous individual chart instances
+            for (const chartId in individualTrendChartInstances) {
+                if (individualTrendChartInstances[chartId]) {
+                    individualTrendChartInstances[chartId].destroy();
+                    delete individualTrendChartInstances[chartId];
+                }
+            }
+
+            kpiData.forEach(kpi => {
+                const chartLabels = [];
+                const chartCurrentValues = [];
+                const chartTargetValues = [];
+                for (let i = 0; i < 12; i++) {
+                    const monthData = kpi.monthlyData[i.toString()];
+                    chartLabels.push(monthNames[i]);
+                    chartCurrentValues.push(monthData ? monthData.currentValue : null);
+                    chartTargetValues.push(monthData ? monthData.target : null);
+                }
+
+                // Create a div for each chart
+                const chartWrapper = document.createElement('div');
+                chartWrapper.className = 'bg-white bg-opacity-75 rounded-xl shadow-lg p-6';
+                chartWrapper.innerHTML = `
+                    <h3 class="text-2xl font-bold text-black mb-6 text-center text-shadow-subtle">${kpi.title} แนวโน้ม</h3>
+                    <div class="chart-container-line h-[400px]">
+                        <canvas id="trendChart-${kpi.id}"></canvas>
+                    </div>
+                `;
+                container.appendChild(chartWrapper);
+
+                // Create the chart
+                setTimeout(() => {
+                    createIndividualLineChart(
+                        `trendChart-${kpi.id}`,
+                        chartLabels,
+                        chartCurrentValues,
+                        chartTargetValues,
+                        kpi.unit,
+                        kpi.title,
+                        kpi.lowerIsBetter // Pass lowerIsBetter to determine target line color
+                    );
+                }, 0);
+            });
+        };
+
         const openQuizPopup = (url) => {
-            const width = 800; // กำหนดความกว้างของหน้าต่างป๊อปอัป
-            const height = 600; // กำหนดความสูงของหน้าต่างป๊อปอัป
+            const width = 800;
+            const height = 600;
             const left = (window.innerWidth / 2) - (width / 2);
             const top = (window.innerHeight / 2) - (height / 2);
             window.open(url, '_blank', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
         };
 
-        // Navigation logic
         const activateNavButton = (buttonId) => {
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('bg-blue-300', 'text-blue-900');
@@ -1529,7 +1536,7 @@
             quizSection.classList.add('section-hidden');
             documentFormsSection.classList.add('section-hidden');
             activateNavButton('nav-combined-trend');
-            renderCombinedTrendSummaryChart(); // Render when navigating to this section
+            renderCombinedTrendSummaryChart(); // เรียกใช้ฟังก์ชันเพื่อแสดงกราฟแยก
         });
 
         navQuizBtn.addEventListener('click', () => {
@@ -1540,7 +1547,6 @@
             activateNavButton('nav-quiz');
         });
 
-        // New navigation button event listener
         navDocumentFormsBtn.addEventListener('click', () => {
             kpiRiskSection.classList.add('section-hidden');
             combinedTrendSection.classList.add('section-hidden');
@@ -1549,33 +1555,26 @@
             activateNavButton('nav-document-forms');
         });
 
-        // Activate initial button
-        // Initial render (moved inside DOMContentLoaded)
         document.addEventListener('DOMContentLoaded', () => {
-            renderKpiCards(currentMonthIndex);
+            // Initial render of KPI cards and risk/opportunity section
+            populateMonthSelector(); // Call this first to set up the dropdown and currentMonthIndex
+            renderKpiCards(currentMonthIndex); // Then render cards based on the determined currentMonthIndex
             renderRiskOpportunityCards();
-            renderRiskOpportunitySummaryChart();
-            // renderCombinedTrendSummaryChart(); // This will be called when the navigation button is clicked
-
-            activateNavButton('nav-kpi-risk');
+            renderRiskOpportunitySummaryCharts(); // Changed to plural to reflect two charts
 
             monthSelect.addEventListener('change', (e) => {
                 currentMonthIndex = parseInt(e.target.value);
                 renderKpiCards(currentMonthIndex);
             });
 
-            // Add event listeners for quiz buttons
             document.querySelectorAll('.quiz-button').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const quizUrl = e.currentTarget.dataset.quizUrl;
                     openQuizPopup(quizUrl);
                 });
             });
+            activateNavButton('nav-kpi-risk');
         });
-
-        // Firebase initialization is commented out as per the provided context.
-        // If Firebase is needed, uncomment initFirebase() and ensure firebaseConfig is correctly set.
-        // initFirebase(); // This line was causing the ReferenceError as initFirebase was not defined in this scope.
     </script>
 
 </body>
